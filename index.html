@@ -3234,6 +3234,13 @@
             const emp = appData.employees.find(e => e.id === employeeId);
             if (!emp) return;
 
+            // Clear any previous pending state and modals
+            window.pendingPayment = null;
+            if (window.paymentTimeout) clearTimeout(window.paymentTimeout);
+            document.getElementById('payment-processing-modal')?.remove();
+            document.getElementById('payment-confirm-modal')?.remove();
+            document.getElementById('qr-payment-modal')?.remove();
+
             const finalPay = gross - deductAmount;
 
             if (method === 'cash') {
@@ -3282,7 +3289,7 @@
                 window.location.href = appUrl;
 
                 // When user returns from UPI app, ask for confirmation
-                setTimeout(() => {
+                window.paymentTimeout = setTimeout(() => {
                     showPaymentConfirmation();
                 }, 2000);
             } else {
@@ -3369,6 +3376,12 @@
         function showPaymentConfirmation() {
             const payment = window.pendingPayment;
             if (!payment) return;
+
+            // Clean up any existing modals first
+            document.getElementById('payment-processing-modal')?.remove();
+            document.getElementById('payment-confirm-modal')?.remove();
+            document.getElementById('qr-payment-modal')?.remove();
+            document.getElementById('payment-fail-modal')?.remove();
 
             // First show "Processing" animation, then show confirmation
             const processingHtml = `
