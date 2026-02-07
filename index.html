@@ -2039,13 +2039,18 @@
                 // Find the most recent payment for this employee
                 const employeePayments = (appData.salaries || [])
                     .filter(s => s.employeeId === emp.id)
-                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+                    .sort((a, b) => {
+                        // Sort by timestamp first (if available), then by date
+                        const timestampA = a.timestamp || new Date(a.date).getTime();
+                        const timestampB = b.timestamp || new Date(b.date).getTime();
+                        return timestampB - timestampA;
+                    });
 
                 const lastPayment = employeePayments[0];
-                const lastPaymentDate = lastPayment ? lastPayment.date : null;
-                const lastPaymentTimestamp = lastPayment?.timestamp || 0;
+                // Use the actual timestamp of when payment was made
+                const lastPaymentTime = lastPayment?.timestamp || (lastPayment ? new Date(lastPayment.date).getTime() : 0);
 
-                // Calculate days worked AFTER the last payment (or all if never paid)
+                // Calculate days worked AFTER the last payment
                 let daysWorkedAfterPayment = 0;
 
                 // Check last 30 days for attendance
@@ -2055,19 +2060,20 @@
                     const dateStr = d.toISOString().split('T')[0];
                     const record = appData.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
 
-                    // Count if:
-                    // 1. No payment exists, OR
-                    // 2. Attendance record was created/modified AFTER the last payment (regardless of attendance date)
-                    const isNewOrEdited = !lastPaymentTimestamp || (record?.timestamp || 0) > lastPaymentTimestamp;
+                    if (record?.status === 'present' || record?.status === 'half-day') {
+                        // Get when this attendance was marked
+                        const attendanceTime = record.timestamp || new Date(dateStr).getTime();
 
-                    // Fallback: If no timestamp on record (old data), use date comparison
-                    const isAfterDate = !record?.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate);
-
-                    if (record?.status === 'present' && (isNewOrEdited || isAfterDate)) {
-                        daysWorkedAfterPayment += 1;
-                    }
-                    if (record?.status === 'half-day' && (isNewOrEdited || isAfterDate)) {
-                        daysWorkedAfterPayment += 0.5;
+                        // Count this day if:
+                        // 1. No payment has ever been made, OR
+                        // 2. This attendance was marked AFTER the last payment
+                        if (!lastPayment || attendanceTime > lastPaymentTime) {
+                            if (record.status === 'present') {
+                                daysWorkedAfterPayment += 1;
+                            } else if (record.status === 'half-day') {
+                                daysWorkedAfterPayment += 0.5;
+                            }
+                        }
                     }
                 }
 
@@ -2254,46 +2260,43 @@
 
             // For each employee, calculate attendance-based salary
             activeEmployees.forEach(emp => {
-                // Find the most recent payment for this employee for Last Paid info
-                // Used to display "Last Paid" column info
+                // Find the most recent payment for this employee
                 const employeePayments = (appData.salaries || [])
                     .filter(s => s.employeeId === emp.id)
-                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+                    .sort((a, b) => {
+                        // Sort by timestamp first (if available), then by date
+                        const timestampA = a.timestamp || new Date(a.date).getTime();
+                        const timestampB = b.timestamp || new Date(b.date).getTime();
+                        return timestampB - timestampA;
+                    });
 
                 const lastPayment = employeePayments[0];
-                const lastPaymentDate = lastPayment ? lastPayment.date : null;
-                const lastPaymentTimestamp = lastPayment?.timestamp || 0;
+                // Use the actual timestamp of when payment was made, not just the date
+                const lastPaymentTime = lastPayment?.timestamp || (lastPayment ? new Date(lastPayment.date).getTime() : 0);
 
-                // Calculate days worked AFTER the last payment (or all if never paid)
+                // Calculate days worked AFTER the last payment
                 let daysWorkedAfterPayment = 0;
-                let daysWorkedTotal = 0;
 
-                // Check last 30 days for attendance (to cover longer periods)
+                // Check last 30 days for attendance
                 for (let i = 0; i < 30; i++) {
                     const d = new Date();
                     d.setDate(d.getDate() - i);
                     const dateStr = d.toISOString().split('T')[0];
                     const record = appData.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
 
-                    if (record?.status === 'present') {
-                        daysWorkedTotal += 1;
-                        // Count if:
-                        // 1. No payment exists, OR
-                        // 2. Attendance record was created/modified AFTER the last payment
-                        const isNewOrEdited = !lastPaymentTimestamp || (record.timestamp || 0) > lastPaymentTimestamp;
-                        const isAfterDate = !record.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate); // Fallback
+                    if (record?.status === 'present' || record?.status === 'half-day') {
+                        // Get when this attendance was marked
+                        const attendanceTime = record.timestamp || new Date(dateStr).getTime();
 
-                        if (isNewOrEdited || isAfterDate) {
-                            daysWorkedAfterPayment += 1;
-                        }
-                    }
-                    if (record?.status === 'half-day') {
-                        daysWorkedTotal += 0.5;
-                        const isNewOrEdited = !lastPaymentTimestamp || (record.timestamp || 0) > lastPaymentTimestamp;
-                        const isAfterDate = !record.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate); // Fallback
-
-                        if (isNewOrEdited || isAfterDate) {
-                            daysWorkedAfterPayment += 0.5;
+                        // Count this day if:
+                        // 1. No payment has ever been made, OR
+                        // 2. This attendance was marked AFTER the last payment
+                        if (!lastPayment || attendanceTime > lastPaymentTime) {
+                            if (record.status === 'present') {
+                                daysWorkedAfterPayment += 1;
+                            } else if (record.status === 'half-day') {
+                                daysWorkedAfterPayment += 0.5;
+                            }
                         }
                     }
                 }
@@ -3237,6 +3240,7 @@
             // Clear any previous pending state and modals
             window.pendingPayment = null;
             if (window.paymentTimeout) clearTimeout(window.paymentTimeout);
+            if (window.confirmTimeout) clearTimeout(window.confirmTimeout);
             document.getElementById('payment-processing-modal')?.remove();
             document.getElementById('payment-confirm-modal')?.remove();
             document.getElementById('qr-payment-modal')?.remove();
@@ -3448,7 +3452,7 @@
             }
 
             // After a delay, show the confirmation options
-            setTimeout(() => {
+            window.confirmTimeout = setTimeout(() => {
                 document.getElementById('payment-processing-modal')?.remove();
                 showConfirmationOptions(payment);
             }, 2500);
