@@ -1,0 +1,3938 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Labor Manager</title>
+
+    <!-- PWA Meta Tags -->
+    <meta name="description"
+        content="Manage your construction workforce - employees, attendance, loans, and salary payments">
+    <meta name="theme-color" content="#6366f1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Labor Manager">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="msapplication-TileColor" content="#6366f1">
+
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="manifest.json">
+
+    <!-- App Icons (using data URI for simplicity) -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%236366f1' rx='20' width='100' height='100'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🏗️</text></svg>">
+    <link rel="apple-touch-icon"
+        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%236366f1' rx='20' width='100' height='100'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white'>🏗️</text></svg>">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+       LABOR MANAGEMENT SYSTEM - DESIGN SYSTEM
+       Premium Dark Theme with Modern Aesthetics
+       ============================================ */
+
+        :root {
+            --primary-50: #eef2ff;
+            --primary-100: #e0e7ff;
+            --primary-200: #c7d2fe;
+            --primary-300: #a5b4fc;
+            --primary-400: #818cf8;
+            --primary-500: #6366f1;
+            --primary-600: #4f46e5;
+            --primary-700: #4338ca;
+            --primary-800: #3730a3;
+            --primary-900: #312e81;
+
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --accent-cyan: #06b6d4;
+
+            --bg-primary: #0f0f1a;
+            --bg-secondary: #1a1a2e;
+            --bg-tertiary: #252542;
+            --bg-card: #1e1e35;
+            --bg-card-hover: #2a2a4a;
+            --bg-input: #252542;
+            --bg-overlay: rgba(0, 0, 0, 0.7);
+
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #64748b;
+            --text-accent: #a5b4fc;
+
+            --border-primary: #334155;
+            --border-secondary: #475569;
+            --border-accent: #6366f1;
+
+            --status-success: #22c55e;
+            --status-warning: #eab308;
+            --status-error: #ef4444;
+            --status-info: #3b82f6;
+            --status-present: #10b981;
+            --status-absent: #ef4444;
+            --status-leave: #f59e0b;
+            --status-half-day: #06b6d4;
+
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+            --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.5), 0 4px 6px -4px rgba(0, 0, 0, 0.4);
+            --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.5), 0 8px 10px -6px rgba(0, 0, 0, 0.4);
+            --shadow-glow: 0 0 20px rgba(99, 102, 241, 0.3);
+
+            --gradient-primary: linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%);
+            --gradient-success: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+            --gradient-danger: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+            --gradient-card: linear-gradient(180deg, rgba(99, 102, 241, 0.1) 0%, transparent 100%);
+
+            --space-1: 0.25rem;
+            --space-2: 0.5rem;
+            --space-3: 0.75rem;
+            --space-4: 1rem;
+            --space-5: 1.25rem;
+            --space-6: 1.5rem;
+            --space-8: 2rem;
+
+            --radius-sm: 0.375rem;
+            --radius-md: 0.5rem;
+            --radius-lg: 0.75rem;
+            --radius-xl: 1rem;
+            --radius-2xl: 1.5rem;
+            --radius-full: 9999px;
+
+            --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            --font-size-xs: 0.75rem;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.125rem;
+            --font-size-xl: 1.25rem;
+            --font-size-2xl: 1.5rem;
+            --font-size-3xl: 1.875rem;
+            --font-size-4xl: 2.25rem;
+
+            --transition-fast: 150ms ease;
+            --transition-base: 200ms ease;
+
+            --sidebar-width: 260px;
+            --header-height: 70px;
+        }
+
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            font-size: 16px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: var(--font-family);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* Layout */
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 0;
+            width: var(--sidebar-width);
+            height: 100vh;
+            background: linear-gradient(180deg, #1a1a2e 0%, #0f0f1a 100%);
+            border-right: 1px solid var(--border-primary);
+            display: flex;
+            flex-direction: column;
+            z-index: 100;
+        }
+
+        .sidebar-header {
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .sidebar-logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+        }
+
+        .sidebar-logo-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-xl);
+            box-shadow: var(--shadow-glow);
+        }
+
+        .sidebar-logo-text {
+            font-size: var(--font-size-lg);
+            font-weight: 700;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: var(--space-4);
+            overflow-y: auto;
+        }
+
+        .nav-section {
+            margin-bottom: var(--space-6);
+        }
+
+        .nav-section-title {
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            padding: var(--space-2) var(--space-3);
+            margin-bottom: var(--space-2);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            border-radius: var(--radius-lg);
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+            margin-bottom: var(--space-1);
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .nav-item.active {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-glow);
+        }
+
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-primary);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 var(--space-8);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+
+        .page-container {
+            flex: 1;
+            padding: var(--space-8);
+            max-width: 1400px;
+            width: 100%;
+            margin: 0 auto;
+        }
+
+        .page-title {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            background: var(--gradient-primary);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: var(--space-2);
+        }
+
+        .page-subtitle {
+            color: var(--text-muted);
+            font-size: var(--font-size-base);
+            margin-bottom: var(--space-6);
+        }
+
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            transition: all var(--transition-base);
+        }
+
+        .card:hover {
+            border-color: var(--border-secondary);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: var(--space-6);
+            margin-bottom: var(--space-8);
+        }
+
+        .stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-6);
+            position: relative;
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--stat-color, var(--gradient-primary));
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .stat-card-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-lg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-2xl);
+            margin-bottom: var(--space-4);
+            background: rgba(99, 102, 241, 0.1);
+        }
+
+        .stat-card-value {
+            font-size: var(--font-size-3xl);
+            font-weight: 700;
+            margin-bottom: var(--space-1);
+        }
+
+        .stat-card-label {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        /* Buttons */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+            padding: var(--space-3) var(--space-5);
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            font-family: inherit;
+            border: none;
+            border-radius: var(--radius-lg);
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .btn-primary {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-primary:hover {
+            box-shadow: var(--shadow-glow);
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .btn-success {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        .btn-ghost {
+            background: transparent;
+            color: var(--text-secondary);
+        }
+
+        .btn-ghost:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-sm {
+            padding: var(--space-2) var(--space-3);
+            font-size: var(--font-size-xs);
+        }
+
+        /* Forms */
+        .form-group {
+            margin-bottom: var(--space-5);
+        }
+
+        .form-label {
+            display: block;
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            color: var(--text-secondary);
+            margin-bottom: var(--space-2);
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: var(--space-3) var(--space-4);
+            font-size: var(--font-size-base);
+            font-family: inherit;
+            background: var(--bg-input);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            color: var(--text-primary);
+            transition: all var(--transition-fast);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--primary-500);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .form-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--space-4);
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: var(--space-1);
+            padding: var(--space-1) var(--space-3);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            border-radius: var(--radius-full);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-success {
+            background: rgba(34, 197, 94, 0.15);
+            color: var(--status-success);
+        }
+
+        .badge-warning {
+            background: rgba(234, 179, 8, 0.15);
+            color: var(--status-warning);
+        }
+
+        .badge-danger {
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--status-error);
+        }
+
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: var(--status-info);
+        }
+
+        /* Tables */
+        .table-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table th {
+            background: var(--bg-tertiary);
+            padding: var(--space-4);
+            text-align: left;
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .table td {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-primary);
+            font-size: var(--font-size-sm);
+        }
+
+        .table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .table tr:hover td {
+            background: var(--bg-card-hover);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-overlay);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: var(--space-4);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-2xl);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            animation: slideUp 0.2s ease;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: var(--space-6);
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .modal-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+        }
+
+        .modal-body {
+            padding: var(--space-6);
+        }
+
+        .modal-footer {
+            display: flex;
+            justify-content: flex-end;
+            gap: var(--space-3);
+            padding: var(--space-6);
+            border-top: 1px solid var(--border-primary);
+        }
+
+        /* Tabs */
+        .tabs {
+            display: flex;
+            gap: var(--space-1);
+            background: var(--bg-tertiary);
+            padding: var(--space-1);
+            border-radius: var(--radius-lg);
+            margin-bottom: var(--space-6);
+        }
+
+        .tab {
+            flex: 1;
+            padding: var(--space-3) var(--space-4);
+            border: none;
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+            font-weight: 500;
+            font-family: inherit;
+            cursor: pointer;
+            border-radius: var(--radius-md);
+            transition: all var(--transition-fast);
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+        }
+
+        .tab.active {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Attendance */
+        .attendance-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: var(--space-4);
+        }
+
+        .attendance-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            padding: var(--space-5);
+        }
+
+        .attendance-card-header {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .attendance-avatar {
+            width: 48px;
+            height: 48px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            color: white;
+        }
+
+        .attendance-name {
+            font-weight: 600;
+        }
+
+        .attendance-role {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .attendance-buttons {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--space-2);
+        }
+
+        .attendance-btn {
+            padding: var(--space-3);
+            border: 2px solid var(--border-primary);
+            border-radius: var(--radius-md);
+            background: transparent;
+            color: var(--text-secondary);
+            font-size: var(--font-size-xs);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all var(--transition-fast);
+        }
+
+        .attendance-btn:hover {
+            border-color: var(--border-secondary);
+            background: var(--bg-tertiary);
+        }
+
+        .attendance-btn.present {
+            border-color: var(--status-present);
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--status-present);
+        }
+
+        .attendance-btn.absent {
+            border-color: var(--status-absent);
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--status-absent);
+        }
+
+        .attendance-btn.half-day {
+            border-color: var(--status-half-day);
+            background: rgba(6, 182, 212, 0.1);
+            color: var(--status-half-day);
+        }
+
+        .attendance-btn.leave {
+            border-color: var(--status-leave);
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--status-leave);
+        }
+
+        /* Employee Cards */
+        .employee-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: var(--space-6);
+        }
+
+        .employee-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            transition: all var(--transition-base);
+        }
+
+        .employee-card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary-500);
+        }
+
+        .employee-card-header {
+            padding: var(--space-6);
+            background: var(--gradient-card);
+            display: flex;
+            align-items: center;
+            gap: var(--space-4);
+        }
+
+        .employee-avatar {
+            width: 64px;
+            height: 64px;
+            background: var(--gradient-primary);
+            border-radius: var(--radius-full);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: var(--font-size-2xl);
+            font-weight: 700;
+            color: white;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .employee-card-body {
+            padding: var(--space-6);
+        }
+
+        .employee-detail {
+            display: flex;
+            justify-content: space-between;
+            padding: var(--space-3) 0;
+            border-bottom: 1px solid var(--border-primary);
+        }
+
+        .employee-detail:last-child {
+            border-bottom: none;
+        }
+
+        .employee-detail-label {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+        }
+
+        .employee-detail-value {
+            font-weight: 500;
+            font-size: var(--font-size-sm);
+        }
+
+        .employee-card-footer {
+            padding: var(--space-4) var(--space-6);
+            background: var(--bg-tertiary);
+            display: flex;
+            gap: var(--space-3);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: var(--space-8) var(--space-4);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: var(--space-6);
+            opacity: 0.5;
+        }
+
+        .empty-state-title {
+            font-size: var(--font-size-xl);
+            font-weight: 600;
+            margin-bottom: var(--space-2);
+        }
+
+        .empty-state-text {
+            color: var(--text-muted);
+            margin-bottom: var(--space-6);
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ============================================
+           REDBUS-STYLE PAYMENT UI
+           ============================================ */
+
+        /* Payment Method Grid */
+        .payment-methods-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--space-3);
+            margin-bottom: var(--space-4);
+        }
+
+        .payment-method-card {
+            background: var(--bg-tertiary);
+            border: 2px solid var(--border-primary);
+            border-radius: var(--radius-lg);
+            padding: var(--space-4);
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: var(--space-2);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .payment-method-card:hover {
+            border-color: var(--primary-400);
+            background: var(--bg-card-hover);
+            transform: translateY(-2px);
+        }
+
+        .payment-method-card.selected {
+            border-color: var(--primary-500);
+            background: rgba(99, 102, 241, 0.15);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.2);
+        }
+
+        .payment-method-card.selected::after {
+            content: '✓';
+            position: absolute;
+            top: var(--space-2);
+            right: var(--space-2);
+            width: 20px;
+            height: 20px;
+            background: var(--primary-500);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            color: white;
+            font-weight: bold;
+        }
+
+        .payment-method-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .payment-method-icon.gpay {
+            background: linear-gradient(135deg, #4285F4 0%, #34A853 50%, #FBBC05 75%, #EA4335 100%);
+        }
+
+        .payment-method-icon.phonepe {
+            background: linear-gradient(135deg, #5f259f 0%, #8b5cf6 100%);
+        }
+
+        .payment-method-icon.paytm {
+            background: linear-gradient(135deg, #00baf2 0%, #0084ff 100%);
+        }
+
+        .payment-method-icon.cash {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+        }
+
+        .payment-method-name {
+            font-size: var(--font-size-sm);
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .payment-method-desc {
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+        }
+
+        /* Payment Summary Card */
+        .payment-summary-card {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+            border: 1px solid var(--primary-400);
+            border-radius: var(--radius-xl);
+            padding: var(--space-4);
+            margin-bottom: var(--space-4);
+        }
+
+        .payment-summary-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-2) 0;
+        }
+
+        .payment-summary-row.total {
+            border-top: 1px dashed var(--border-primary);
+            margin-top: var(--space-2);
+            padding-top: var(--space-3);
+        }
+
+        .payment-summary-label {
+            color: var(--text-secondary);
+            font-size: var(--font-size-sm);
+        }
+
+        .payment-summary-value {
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+        }
+
+        .payment-summary-value.deduction {
+            color: var(--status-warning);
+        }
+
+        .payment-summary-value.total {
+            font-size: var(--font-size-xl);
+            color: var(--status-success);
+        }
+
+        /* Proceed Button */
+        .btn-proceed {
+            width: 100%;
+            padding: var(--space-4);
+            font-size: var(--font-size-base);
+            background: var(--gradient-success);
+            border: none;
+            border-radius: var(--radius-lg);
+            color: white;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-2);
+        }
+
+        .btn-proceed:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+        }
+
+        .btn-proceed:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Success Overlay */
+        .payment-success-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 300;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .payment-success-content {
+            text-align: center;
+            animation: successBounce 0.5s ease;
+        }
+
+        @keyframes successBounce {
+            0% {
+                transform: scale(0.5);
+                opacity: 0;
+            }
+
+            50% {
+                transform: scale(1.1);
+            }
+
+            100% {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .success-checkmark {
+            width: 100px;
+            height: 100px;
+            background: var(--gradient-success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-6);
+            font-size: 50px;
+            box-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
+            animation: pulse 1s ease infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 40px rgba(16, 185, 129, 0.5);
+            }
+
+            50% {
+                box-shadow: 0 0 60px rgba(16, 185, 129, 0.8);
+            }
+        }
+
+        .success-amount {
+            font-size: var(--font-size-4xl);
+            font-weight: 700;
+            color: var(--status-success);
+            margin-bottom: var(--space-2);
+        }
+
+        .success-message {
+            font-size: var(--font-size-lg);
+            color: var(--text-primary);
+            margin-bottom: var(--space-2);
+        }
+
+        .success-submessage {
+            color: var(--text-muted);
+            font-size: var(--font-size-sm);
+            margin-bottom: var(--space-6);
+        }
+
+        /* Confetti */
+        .confetti-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 301;
+            overflow: hidden;
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            top: -10px;
+            animation: confettiFall 3s ease-out forwards;
+        }
+
+        @keyframes confettiFall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+
+            100% {
+                transform: translateY(100vh) rotate(720deg);
+                opacity: 0;
+            }
+        }
+
+        /* Loan Deduction Toggle Improved */
+        .deduction-toggle {
+            display: flex;
+            gap: var(--space-2);
+            margin-bottom: var(--space-3);
+        }
+
+        .deduction-toggle .btn {
+            flex: 1;
+            transition: all 0.2s ease;
+        }
+
+        /* Utility */
+        .hidden {
+            display: none !important;
+        }
+
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .mobile-menu-btn {
+                display: flex !important;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .employee-grid,
+            .attendance-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header {
+                padding: 0 var(--space-4);
+            }
+
+            .page-container {
+                padding: var(--space-4);
+            }
+        }
+
+        /* Login Overlay */
+        .login-overlay {
+            position: fixed;
+            inset: 0;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .login-container {
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-2xl);
+            padding: var(--space-8);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            box-shadow: var(--shadow-xl);
+        }
+
+        .login-logo {
+            margin-bottom: var(--space-8);
+        }
+
+        /* Account Dropdown */
+        .account-dropdown-wrapper {
+            position: relative;
+        }
+
+        .account-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: var(--gradient-primary);
+            border: 2px solid var(--border-primary);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: var(--font-size-sm);
+            color: white;
+            transition: all 0.2s ease;
+        }
+
+        .account-btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+
+        .account-dropdown {
+            position: absolute;
+            top: calc(100% + var(--space-2));
+            right: 0;
+            width: 320px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-primary);
+            border-radius: var(--radius-xl);
+            box-shadow: var(--shadow-xl);
+            z-index: 1000;
+            display: none;
+            animation: dropdownFadeIn 0.2s ease;
+        }
+
+        .account-dropdown.show {
+            display: block;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .account-dropdown-header {
+            padding: var(--space-4);
+            border-bottom: 1px solid var(--border-primary);
+            text-align: center;
+        }
+
+        .account-dropdown-user {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .account-dropdown-user:hover {
+            background: var(--bg-hover);
+        }
+
+        .account-dropdown-user.current {
+            background: var(--bg-tertiary);
+        }
+
+        .account-dropdown-user .user-check {
+            margin-left: auto;
+            color: var(--status-success);
+        }
+
+        .account-dropdown-divider {
+            height: 1px;
+            background: var(--border-primary);
+            margin: var(--space-2) 0;
+        }
+
+        .account-dropdown-action {
+            display: flex;
+            align-items: center;
+            gap: var(--space-3);
+            padding: var(--space-3) var(--space-4);
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: var(--font-size-sm);
+        }
+
+        .account-dropdown-action:hover {
+            background: var(--bg-hover);
+        }
+
+        .account-dropdown-action.logout {
+            color: var(--status-error);
+        }
+
+        .account-dropdown-footer {
+            padding: var(--space-3) var(--space-4);
+            border-top: 1px solid var(--border-primary);
+            font-size: var(--font-size-xs);
+            color: var(--text-muted);
+            text-align: center;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Login Overlay -->
+    <div id="login-overlay" class="login-overlay">
+        <div class="login-container">
+            <div class="login-logo">
+                <div class="sidebar-logo-icon"
+                    style="width:64px;height:64px;font-size:32px;margin:0 auto var(--space-4);">🏗️</div>
+                <h1 style="font-size:var(--font-size-2xl);margin-bottom:var(--space-1);">
+                    <span>Labor</span><span style="color:var(--primary-400)">Manager</span>
+                </h1>
+                <p id="auth-subtitle" style="color:var(--text-muted);font-size:var(--font-size-sm);">Login to continue
+                </p>
+            </div>
+
+            <!-- Auth Tabs -->
+            <div class="tabs" style="margin-bottom:var(--space-6);">
+                <button class="tab active" id="tab-login" onclick="switchAuthTab('login')">🔐 Login</button>
+                <button class="tab" id="tab-register" onclick="switchAuthTab('register')">📝 Create Account</button>
+            </div>
+
+            <!-- Login Form -->
+            <form id="login-form" onsubmit="handleLogin(event)">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="login-username" placeholder="Enter username" required
+                        autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="login-password" placeholder="Enter password" required
+                        autocomplete="current-password">
+                </div>
+                <div id="login-error"
+                    style="color:var(--status-error);font-size:var(--font-size-sm);margin-bottom:var(--space-4);display:none;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;padding:var(--space-4);">🔐
+                    Login</button>
+            </form>
+
+            <!-- Register Form -->
+            <form id="register-form" onsubmit="handleRegister(event)" style="display:none;">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input" id="register-name" placeholder="Enter your name" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="register-username" placeholder="Choose a username"
+                        required autocomplete="username">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <input type="password" class="form-input" id="register-password" placeholder="Create password"
+                        required autocomplete="new-password" minlength="4">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <input type="password" class="form-input" id="register-confirm" placeholder="Confirm password"
+                        required autocomplete="new-password">
+                </div>
+                <div id="register-error"
+                    style="color:var(--status-error);font-size:var(--font-size-sm);margin-bottom:var(--space-4);display:none;">
+                </div>
+                <div id="register-success"
+                    style="color:var(--status-success);font-size:var(--font-size-sm);margin-bottom:var(--space-4);display:none;">
+                </div>
+                <button type="submit" class="btn btn-primary" style="width:100%;padding:var(--space-4);">📝
+                    Create Account</button>
+            </form>
+
+            <p id="auth-footer"
+                style="margin-top:var(--space-6);font-size:var(--font-size-xs);color:var(--text-muted);text-align:center;">
+                Don't have an account? Click "Create Account" above
+            </p>
+        </div>
+    </div>
+
+    <div class="app-container" id="app-container" style="display:none;">
+        <!-- Sidebar -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <div class="sidebar-logo-icon">🏗️</div>
+                    <div class="sidebar-logo-text">
+                        <span>Labor</span><span style="color: var(--primary-400)">Manager</span>
+                    </div>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <div class="nav-section">
+                    <div class="nav-section-title">Overview</div>
+                    <button class="nav-item active" data-page="dashboard">
+                        <span>📊</span><span>Dashboard</span>
+                    </button>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Management</div>
+                    <button class="nav-item" data-page="employees">
+                        <span>👷</span><span>Employees</span>
+                    </button>
+                    <button class="nav-item" data-page="attendance">
+                        <span>📋</span><span>Attendance</span>
+                    </button>
+                    <button class="nav-item" data-page="loans">
+                        <span>💰</span><span>Loans & Advances</span>
+                    </button>
+                    <button class="nav-item" data-page="salary">
+                        <span>💵</span><span>Salary</span>
+                    </button>
+                    <button class="nav-item" data-page="history">
+                        <span>📜</span><span>History</span>
+                    </button>
+                </div>
+                <div class="nav-section">
+                    <div class="nav-section-title">Account</div>
+                    <div
+                        style="padding: var(--space-3) var(--space-4); display: flex; align-items: center; gap: var(--space-3); margin-bottom: var(--space-2);">
+                        <div class="attendance-avatar" style="width:32px;height:32px;font-size:var(--font-size-xs);"
+                            id="user-avatar">👤</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:500;font-size:var(--font-size-sm);" id="user-display-name">User
+                            </div>
+                            <div style="font-size:var(--font-size-xs);color:var(--text-muted);"
+                                id="user-display-username">@username</div>
+                        </div>
+                    </div>
+                    <button class="nav-item" onclick="handleLogout()" style="color:var(--status-error);">
+                        <span>🚪</span><span>Logout</span>
+                    </button>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <header class="header">
+                <div>
+                    <button class="btn btn-ghost mobile-menu-btn" onclick="toggleSidebar()"
+                        style="display:none;">☰</button>
+                    <h2 style="font-size: var(--font-size-lg); font-weight: 600;">Welcome back! 👋</h2>
+                    <p style="font-size: var(--font-size-sm); color: var(--text-muted);">Manage your construction team
+                    </p>
+                </div>
+                <div style="display: flex; align-items: center; gap: var(--space-6);">
+                    <div style="text-align: right;">
+                        <div style="font-size: var(--font-size-lg); font-weight: 600;" id="header-day"></div>
+                        <div style="font-size: var(--font-size-sm); color: var(--text-muted);" id="header-date"></div>
+                    </div>
+                    <!-- Account Dropdown -->
+                    <div class="account-dropdown-wrapper">
+                        <button class="account-btn" id="account-btn" onclick="toggleAccountDropdown()">👤</button>
+                        <div class="account-dropdown" id="account-dropdown">
+                            <div class="account-dropdown-header">
+                                <div class="attendance-avatar"
+                                    style="width:60px;height:60px;font-size:var(--font-size-xl);margin:0 auto var(--space-2);"
+                                    id="dropdown-avatar">👤</div>
+                                <div style="font-weight:600;font-size:var(--font-size-lg);" id="dropdown-name">User
+                                </div>
+                                <div style="color:var(--text-muted);font-size:var(--font-size-sm);"
+                                    id="dropdown-username">@username</div>
+                            </div>
+                            <div id="account-users-list"></div>
+                            <div class="account-dropdown-divider"></div>
+                            <div class="account-dropdown-action" onclick="showAddAccountModal()">
+                                <span>➕</span>
+                                <span>Add another account</span>
+                            </div>
+                            <div class="account-dropdown-action logout" onclick="handleLogout()">
+                                <span>🚪</span>
+                                <span>Sign out</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </header>
+
+            <div class="page-container">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page">
+                    <h1 class="page-title">Dashboard</h1>
+                    <p class="page-subtitle">Overview of your construction workforce</p>
+
+                    <div class="stats-grid">
+                        <div class="stat-card" style="--stat-color: var(--gradient-primary)">
+                            <div class="stat-card-icon">👷</div>
+                            <div class="stat-card-value" id="stat-employees">0</div>
+                            <div class="stat-card-label">Active Workers</div>
+                        </div>
+                        <div class="stat-card" style="--stat-color: var(--gradient-success)">
+                            <div class="stat-card-icon">✅</div>
+                            <div class="stat-card-value" id="stat-present">0</div>
+                            <div class="stat-card-label">Present Today</div>
+                        </div>
+                        <div class="stat-card" style="--stat-color: var(--gradient-warning)">
+                            <div class="stat-card-icon">💰</div>
+                            <div class="stat-card-value" id="stat-loans">₹0</div>
+                            <div class="stat-card-label">Outstanding Loans</div>
+                        </div>
+                        <div class="stat-card" style="--stat-color: var(--gradient-danger)">
+                            <div class="stat-card-icon">📋</div>
+                            <div class="stat-card-value" id="stat-pending">0</div>
+                            <div class="stat-card-label">Pending Payments</div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h3 style="margin-bottom: var(--space-4);">📅 Quick Actions</h3>
+                        <div style="display: flex; gap: var(--space-3); flex-wrap: wrap;">
+                            <button class="btn btn-primary" onclick="showPage('employees')">➕ Add Employee</button>
+                            <button class="btn btn-secondary" onclick="showPage('attendance')">📋 Mark
+                                Attendance</button>
+                            <button class="btn btn-secondary" onclick="showPage('salary')">💵 Process Salaries</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Employees Page -->
+                <div id="page-employees" class="page hidden">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-6);">
+                        <div>
+                            <h1 class="page-title">Employees</h1>
+                            <p class="page-subtitle">Manage your construction workforce</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openEmployeeModal()">➕ Add Employee</button>
+                    </div>
+
+                    <div id="employees-list" class="employee-grid"></div>
+                    <div id="employees-empty" class="empty-state hidden">
+                        <div class="empty-state-icon">👷</div>
+                        <p class="empty-state-title">No employees yet</p>
+                        <p class="empty-state-text">Add your first employee to get started</p>
+                        <button class="btn btn-primary" onclick="openEmployeeModal()">➕ Add Employee</button>
+                    </div>
+                </div>
+
+                <!-- Attendance Page -->
+                <div id="page-attendance" class="page hidden">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-6);">
+                        <div>
+                            <h1 class="page-title">Attendance</h1>
+                            <p class="page-subtitle">Mark daily attendance for workers</p>
+                        </div>
+                        <div id="attendance-date" class="badge badge-info"
+                            style="font-size: var(--font-size-sm); padding: var(--space-2) var(--space-4);"></div>
+                    </div>
+
+                    <!-- View Tabs -->
+                    <!-- View Tabs -->
+                    <div class="tabs" style="max-width: 400px; margin-bottom: var(--space-6);">
+                        <button class="tab active" id="tab-today" onclick="openAttendanceMarking(getTodayDate())">📋
+                            Mark Today</button>
+                        <button class="tab" id="tab-calendar" onclick="switchAttendanceView('calendar')">📅 Calendar
+                            View</button>
+                    </div>
+
+                    <!-- Today's Attendance View (Renamed to Attendance Marking View) -->
+                    <div id="attendance-today-view">
+                        <div style="text-align: center; margin-bottom: var(--space-4);">
+                            <h3 id="marking-view-date-title" style="margin: 0;"></h3>
+                            <p
+                                style="color: var(--text-muted); font-size: var(--font-size-sm); margin-top: var(--space-1);">
+                                Mark or edit attendance for this day</p>
+                        </div>
+                        <div id="attendance-grid" class="attendance-grid"></div>
+                        <div id="attendance-save-section"
+                            style="text-align: center; margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--border-primary);">
+                            <button class="btn btn-success" onclick="saveAttendanceAndConfirm()"
+                                style="min-width: 200px;">
+                                ✅ Save Attendance
+                            </button>
+                            <p
+                                style="color: var(--text-muted); font-size: var(--font-size-xs); margin-top: var(--space-2);">
+                                Attendance is auto-saved, but click here to confirm changes
+                            </p>
+                        </div>
+                        <div id="attendance-empty" class="empty-state hidden">
+                            <div class="empty-state-icon">📋</div>
+                            <p class="empty-state-title">No employees yet</p>
+                            <p class="empty-state-text">Add employees first to mark their attendance</p>
+                        </div>
+                    </div>
+
+                    <!-- Calendar View -->
+                    <div id="attendance-calendar-view" class="hidden">
+                        <!-- Calendar Navigation -->
+                        <div class="card" style="margin-bottom: var(--space-6);">
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <div style="display: flex; align-items: center; gap: var(--space-3);">
+                                    <button class="btn btn-ghost" onclick="navigateCalendarMonth(-1)">←</button>
+                                    <h3 id="calendar-month-title"
+                                        style="margin: 0; min-width: 100px; text-align: center;"></h3>
+                                    <button class="btn btn-ghost" onclick="navigateCalendarMonth(1)">→</button>
+                                </div>
+                                <select class="form-select" id="calendar-year-select" onchange="changeCalendarYear()"
+                                    style="width: auto; padding: var(--space-2) var(--space-4); background: var(--bg-card); cursor: pointer;">
+                                </select>
+                            </div>
+                        </div>
+
+                        <div style="display: grid; grid-template-columns: 1fr 350px; gap: var(--space-6);">
+                            <!-- Calendar Grid -->
+                            <div class="card">
+                                <div id="calendar-grid"
+                                    style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 2px;"></div>
+                            </div>
+
+                            <!-- Selected Day Details -->
+                            <div class="card">
+                                <h3 id="calendar-selected-title" style="margin-bottom: var(--space-4);">Select a date
+                                </h3>
+                                <div id="calendar-day-details">
+                                    <p style="color: var(--text-muted);">Click on a date in the calendar to view
+                                        attendance details.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Attendance Legend -->
+                        <div class="card" style="margin-top: var(--space-6);">
+                            <h4 style="margin-bottom: var(--space-3);">Legend</h4>
+                            <div style="display: flex; gap: var(--space-6); flex-wrap: wrap;">
+                                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                    <div
+                                        style="width: 16px; height: 16px; background: var(--status-present); border-radius: 4px;">
+                                    </div>
+                                    <span style="font-size: var(--font-size-sm);">Present</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                    <div
+                                        style="width: 16px; height: 16px; background: var(--status-half-day); border-radius: 4px;">
+                                    </div>
+                                    <span style="font-size: var(--font-size-sm);">Half Day</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                    <div
+                                        style="width: 16px; height: 16px; background: var(--status-absent); border-radius: 4px;">
+                                    </div>
+                                    <span style="font-size: var(--font-size-sm);">Absent</span>
+                                </div>
+                                <div style="display: flex; align-items: center; gap: var(--space-2);">
+                                    <div
+                                        style="width: 16px; height: 16px; background: var(--status-leave); border-radius: 4px;">
+                                    </div>
+                                    <span style="font-size: var(--font-size-sm);">Leave</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loans Page -->
+                <div id="page-loans" class="page hidden">
+                    <div
+                        style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: var(--space-6);">
+                        <div>
+                            <h1 class="page-title">Loans & Advances</h1>
+                            <p class="page-subtitle">Manage worker loans and advances</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openLoanModal()">➕ New Loan</button>
+                    </div>
+
+                    <div id="loans-list"></div>
+                    <div id="loans-empty" class="empty-state hidden">
+                        <div class="empty-state-icon">💵</div>
+                        <p class="empty-state-title">No loans recorded</p>
+                        <p class="empty-state-text">Loan requests will appear here</p>
+                    </div>
+                </div>
+
+                <!-- Salary Page -->
+                <div id="page-salary" class="page hidden">
+                    <h1 class="page-title">Weekly Salary</h1>
+                    <p class="page-subtitle">Calculate and process worker payments</p>
+
+                    <div id="salary-table" style="margin-top: var(--space-6);"></div>
+                    <div id="salary-empty" class="empty-state hidden">
+                        <div class="empty-state-icon">💵</div>
+                        <p class="empty-state-title">No employees yet</p>
+                        <p class="empty-state-text">Add employees and mark attendance to calculate salaries</p>
+                    </div>
+                </div>
+
+                <!-- History Page -->
+                <div id="page-history" class="page hidden">
+                    <h1 class="page-title">History</h1>
+                    <p class="page-subtitle">Complete record of payments, loans, and attendance</p>
+
+                    <!-- History Tabs -->
+                    <div class="tabs" style="max-width: 500px; margin-bottom: var(--space-6);">
+                        <button class="tab active" id="tab-payments" onclick="switchHistoryTab('payments')">💵
+                            Payments</button>
+                        <button class="tab" id="tab-loans-history" onclick="switchHistoryTab('loans')">💰 Loans</button>
+                        <button class="tab" id="tab-attendance-history" onclick="switchHistoryTab('attendance')">📋
+                            Attendance</button>
+                    </div>
+
+                    <div id="history-payments" class="history-section"></div>
+                    <div id="history-loans" class="history-section hidden"></div>
+                    <div id="history-attendance" class="history-section hidden"></div>
+                </div>
+            </div>
+            <!-- Settings Page -->
+            <div id="page-settings" class="page hidden" style="max-width: 600px; margin: 0 auto;">
+                <div class="card">
+                    <h2 style="margin-bottom: var(--space-4);">⚙️ Application Settings</h2>
+                    <p style="color: var(--text-muted); margin-bottom: var(--space-6);">Configure your details for
+                        payment requests.</p>
+
+                    <form onsubmit="saveSettingsPage(event)">
+                        <div class="form-group">
+                            <label class="form-label">Owner / Business Name</label>
+                            <input type="text" class="form-input" id="setting-owner-name"
+                                placeholder="E.g. John Construction" required>
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Phone Number (WhatsApp)</label>
+                                <input type="tel" class="form-input" id="setting-owner-phone" placeholder="9876543210"
+                                    pattern="[0-9]{10}" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">UPI ID (VPA)</label>
+                                <input type="text" class="form-input" id="setting-owner-upi" placeholder="name@upi">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary"
+                            style="width: 100%; margin-top: var(--space-4);">💾 Save Settings</button>
+                    </form>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Employee Modal -->
+    <div id="employee-modal" class="modal-overlay hidden" onclick="closeEmployeeModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title" id="employee-modal-title">Add New Employee</h2>
+                <button class="btn btn-ghost" onclick="closeEmployeeModal()">✕</button>
+            </div>
+            <form onsubmit="saveEmployee(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Full Name *</label>
+                        <input type="text" class="form-input" id="emp-name" placeholder="Enter full name" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Role</label>
+                            <select class="form-select" id="emp-role" onchange="updateWageFromRole()">
+                                <option value="Mason" data-wage="800">Mason (₹800/day)</option>
+                                <option value="Carpenter" data-wage="750">Carpenter (₹750/day)</option>
+                                <option value="Plumber" data-wage="700">Plumber (₹700/day)</option>
+                                <option value="Laborer" data-wage="500">Laborer (₹500/day)</option>
+                                <option value="Helper" data-wage="400">Helper (₹400/day)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Daily Wage (₹)</label>
+                            <input type="number" class="form-input" id="emp-wage" value="800" min="0">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number</label>
+                        <input type="tel" class="form-input" id="emp-phone" placeholder="Enter phone number">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">UPI ID (for Google Pay)</label>
+                        <input type="text" class="form-input" id="emp-upi"
+                            placeholder="e.g., name@upi or 9876543210@ybl">
+                        <p
+                            style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--space-1);">
+                            Optional - Used for direct payment via Google Pay
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeEmployeeModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Save Employee</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loan Modal -->
+    <div id="loan-modal" class="modal-overlay hidden" onclick="closeLoanModal(event)">
+        <div class="modal" onclick="event.stopPropagation()">
+            <div class="modal-header">
+                <h2 class="modal-title">New Loan Request</h2>
+                <button class="btn btn-ghost" onclick="closeLoanModal()">✕</button>
+            </div>
+            <form onsubmit="saveLoan(event)">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label class="form-label">Select Employee *</label>
+                        <select class="form-select" id="loan-employee" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Amount (₹) *</label>
+                        <input type="number" class="form-input" id="loan-amount" placeholder="Enter amount" min="1"
+                            required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Purpose</label>
+                        <input type="text" class="form-input" id="loan-purpose" placeholder="Reason for loan">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" onclick="closeLoanModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Submit Request</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Payment Modal - RedBus Style -->
+    <div id="payment-modal" class="modal-overlay hidden" onclick="closePaymentModal(event)">
+        <div class="modal" onclick="event.stopPropagation()" style="max-width: 480px;">
+            <div class="modal-header">
+                <h2 class="modal-title">💵 Pay Salary</h2>
+                <button class="btn btn-ghost" onclick="closePaymentModal()">✕</button>
+            </div>
+            <div class="modal-body">
+                <!-- Employee Info -->
+                <div id="payment-employee-info"
+                    style="display: flex; align-items: center; gap: var(--space-4); margin-bottom: var(--space-4);">
+                </div>
+
+                <!-- Payment Summary Card -->
+                <div class="payment-summary-card">
+                    <div class="payment-summary-row">
+                        <span class="payment-summary-label">Gross Salary</span>
+                        <span class="payment-summary-value" id="payment-gross"></span>
+                    </div>
+                    <div id="payment-loan-row" class="payment-summary-row" style="display: none;">
+                        <span class="payment-summary-label">Outstanding Loan</span>
+                        <span class="payment-summary-value" id="payment-loan-balance"
+                            style="color: var(--status-warning);"></span>
+                    </div>
+                    <div id="payment-deduction-row" class="payment-summary-row" style="display: none;">
+                        <span class="payment-summary-label">Loan Deduction</span>
+                        <span class="payment-summary-value deduction" id="payment-deduction-display">-₹0</span>
+                    </div>
+                    <div class="payment-summary-row total">
+                        <span class="payment-summary-label" style="font-weight: 600;">Amount to Pay</span>
+                        <span class="payment-summary-value total" id="payment-final"></span>
+                    </div>
+                </div>
+
+                <!-- Loan Deduction Section -->
+                <div id="loan-deduction-section" class="hidden">
+                    <div
+                        style="background: rgba(245, 158, 11, 0.1); border: 1px solid var(--status-warning); padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+                        <h4
+                            style="margin: 0 0 var(--space-3) 0; color: var(--status-warning); font-size: var(--font-size-sm);">
+                            💰 Deduct from Loan?</h4>
+
+                        <div class="deduction-toggle">
+                            <button type="button" class="btn btn-secondary" id="btn-deduct-yes"
+                                onclick="toggleDeduction(true)">✅ Yes</button>
+                            <button type="button" class="btn btn-ghost" id="btn-deduct-no"
+                                onclick="toggleDeduction(false)">❌ No</button>
+                        </div>
+
+                        <div id="deduction-amount-section" class="hidden">
+                            <div style="display: flex; gap: var(--space-2); align-items: center;">
+                                <input type="number" class="form-input" id="deduction-amount" min="0"
+                                    placeholder="Amount" style="flex: 1;">
+                                <button type="button" class="btn btn-secondary btn-sm"
+                                    onclick="setMaxDeduction()">Max</button>
+                            </div>
+                            <p id="deduction-hint"
+                                style="font-size: var(--font-size-xs); color: var(--text-muted); margin-top: var(--space-2);">
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Payment Methods Section -->
+                <div id="payment-methods-section">
+                    <h4
+                        style="margin: 0 0 var(--space-3) 0; font-size: var(--font-size-sm); color: var(--text-secondary);">
+                        Select Payment Method</h4>
+
+                    <div class="payment-methods-grid">
+                        <div class="payment-method-card selected" onclick="selectPaymentMethod('gpay')">
+                            <div class="payment-method-icon gpay">
+                                <span style="color: white; font-weight: bold;">G</span>
+                            </div>
+                            <span class="payment-method-name">Google Pay</span>
+                            <span class="payment-method-desc">UPI</span>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod('phonepe')">
+                            <div class="payment-method-icon phonepe">
+                                <span style="color: white;">₪</span>
+                            </div>
+                            <span class="payment-method-name">PhonePe</span>
+                            <span class="payment-method-desc">UPI</span>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod('paytm')">
+                            <div class="payment-method-icon paytm">
+                                <span style="color: white; font-weight: bold;">₹</span>
+                            </div>
+                            <span class="payment-method-name">Paytm</span>
+                            <span class="payment-method-desc">UPI</span>
+                        </div>
+
+                        <div class="payment-method-card" onclick="selectPaymentMethod('cash')">
+                            <div class="payment-method-icon cash">
+                                <span style="color: white;">💵</span>
+                            </div>
+                            <span class="payment-method-name">Cash</span>
+                            <span class="payment-method-desc">Manual</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Share Request Link (for remote payments) -->
+                <div id="payment-share-section" style="margin-top: var(--space-3); display: none;">
+                    <button class="btn btn-ghost" onclick="requestFromOwner()"
+                        style="width: 100%; border: 1px dashed var(--border-primary); padding: var(--space-3);">
+                        📤 Share Payment Request
+                    </button>
+                </div>
+            </div>
+
+            <!-- Proceed Button -->
+            <div class="modal-footer" style="border-top: none; padding-top: 0;">
+                <button class="btn-proceed" id="btn-proceed-payment" onclick="proceedToPayment()">
+                    <span>💰</span>
+                    <span>Proceed to Pay</span>
+                    <span id="proceed-amount"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ========== DATA STORE ==========
+        let appData = {
+            employees: [],
+            attendance: [],
+            loans: [],
+            salaries: []
+        };
+
+        // Load from localStorage
+        function loadData() {
+            const saved = localStorage.getItem('laborManagementData');
+            if (saved) {
+                appData = JSON.parse(saved);
+                if (!appData.settings) appData.settings = {}; // Initialize Settings if missing
+            } else {
+                if (!appData.settings) appData.settings = {};
+            }
+        }
+
+        // Save to localStorage
+        function saveData() {
+            localStorage.setItem('laborManagementData', JSON.stringify(appData));
+        }
+
+        // Generate ID
+        function generateId() {
+            return Date.now().toString(36) + Math.random().toString(36).substr(2);
+        }
+
+        // Format currency
+        function formatCurrency(amount) {
+            return '₹' + Number(amount).toLocaleString('en-IN');
+        }
+
+        // Get today's date
+        function getTodayDate() {
+            return new Date().toISOString().split('T')[0];
+        }
+
+        // Get initials
+        function getInitials(name) {
+            if (!name) return '?';
+            const parts = name.trim().split(' ');
+            if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+            return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+        }
+
+        // ========== NAVIGATION ==========
+        function showPage(pageName) {
+            // Hide all pages
+            document.querySelectorAll('.page').forEach(p => p.classList.add('hidden'));
+            // Show selected page
+            document.getElementById('page-' + pageName).classList.remove('hidden');
+            // Update active nav
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.querySelector(`[data-page="${pageName}"]`).classList.add('active');
+            // Refresh page content
+            refreshPage(pageName);
+            // Close sidebar on mobile
+            document.getElementById('sidebar').classList.remove('open');
+        }
+
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // ========== REFRESH PAGES ==========
+        function refreshPage(pageName) {
+            switch (pageName) {
+                case 'dashboard': refreshDashboard(); break;
+                case 'employees': refreshEmployees(); break;
+                case 'attendance': refreshAttendance(); break;
+                case 'loans': refreshLoans(); break;
+                case 'salary': refreshSalary(); break;
+                case 'salary': refreshSalary(); break;
+                case 'history': refreshHistory(); break;
+                case 'settings': refreshSettings(); break;
+            }
+        }
+
+        function refreshDashboard() {
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+            const today = getTodayDate();
+
+            // Stats
+            const todayAttendance = appData.attendance.filter(a => a.date === today && (a.status === 'present' || a.status === 'half-day'));
+            const activeLoans = appData.loans.filter(l => l.status === 'approved' && (l.remainingBalance || l.amount) > 0);
+            const totalLoans = activeLoans.reduce((sum, l) => sum + (l.remainingBalance || l.amount), 0);
+
+            // Calculate pending salary (attendance AFTER last payment)
+            let totalPending = 0;
+            activeEmployees.forEach(emp => {
+                // Find the most recent payment for this employee
+                const employeePayments = (appData.salaries || [])
+                    .filter(s => s.employeeId === emp.id)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                const lastPayment = employeePayments[0];
+                const lastPaymentDate = lastPayment ? lastPayment.date : null;
+                const lastPaymentTimestamp = lastPayment?.timestamp || 0;
+
+                // Calculate days worked AFTER the last payment (or all if never paid)
+                let daysWorkedAfterPayment = 0;
+
+                // Check last 30 days for attendance
+                for (let i = 0; i < 30; i++) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const dateStr = d.toISOString().split('T')[0];
+                    const record = appData.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
+
+                    // Count if:
+                    // 1. No payment exists, OR
+                    // 2. Attendance record was created/modified AFTER the last payment (regardless of attendance date)
+                    const isNewOrEdited = !lastPaymentTimestamp || (record?.timestamp || 0) > lastPaymentTimestamp;
+
+                    // Fallback: If no timestamp on record (old data), use date comparison
+                    const isAfterDate = !record?.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate);
+
+                    if (record?.status === 'present' && (isNewOrEdited || isAfterDate)) {
+                        daysWorkedAfterPayment += 1;
+                    }
+                    if (record?.status === 'half-day' && (isNewOrEdited || isAfterDate)) {
+                        daysWorkedAfterPayment += 0.5;
+                    }
+                }
+
+                totalPending += daysWorkedAfterPayment * emp.dailyWage;
+            });
+
+            document.getElementById('stat-employees').textContent = activeEmployees.length;
+            document.getElementById('stat-present').textContent = todayAttendance.length;
+            document.getElementById('stat-loans').textContent = formatCurrency(totalLoans);
+            document.getElementById('stat-pending').textContent = formatCurrency(totalPending);
+        }
+
+        function refreshEmployees() {
+            const list = document.getElementById('employees-list');
+            const empty = document.getElementById('employees-empty');
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+
+            if (activeEmployees.length === 0) {
+                list.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            list.classList.remove('hidden');
+            list.innerHTML = activeEmployees.map(emp => `
+        <div class="employee-card">
+          <div class="employee-card-header">
+            <div class="employee-avatar">${getInitials(emp.name)}</div>
+            <div>
+              <h3 style="margin:0">${emp.name}</h3>
+              <p style="margin:0; color: var(--text-muted); font-size: var(--font-size-sm)">${emp.role}</p>
+            </div>
+            <span class="badge badge-success">Active</span>
+          </div>
+          <div class="employee-card-body">
+            <div class="employee-detail">
+              <span class="employee-detail-label">📞 Phone</span>
+              <span class="employee-detail-value">${emp.phone || 'Not set'}</span>
+            </div>
+            <div class="employee-detail">
+              <span class="employee-detail-label">💵 Daily Wage</span>
+              <span class="employee-detail-value">${formatCurrency(emp.dailyWage)}</span>
+            </div>
+          </div>
+          <div class="employee-card-footer">
+            <button class="btn btn-secondary btn-sm" onclick="editEmployee('${emp.id}')" style="flex:1">✏️ Edit</button>
+            <button class="btn btn-ghost btn-sm" onclick="archiveEmployee('${emp.id}')" style="flex:1">📥 Archive</button>
+          </div>
+        </div>
+      `).join('');
+        }
+
+        function refreshAttendance() {
+            const grid = document.getElementById('attendance-grid');
+            const empty = document.getElementById('attendance-empty');
+            const dateEl = document.getElementById('attendance-date');
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+
+            // Use currentMarkingDate if available, else today
+            const displayDate = typeof currentMarkingDate !== 'undefined' ? currentMarkingDate : getTodayDate();
+            const dateObj = new Date(displayDate);
+
+            dateEl.textContent = dateObj.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short', year: 'numeric' });
+
+            if (activeEmployees.length === 0) {
+                grid.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            grid.classList.remove('hidden');
+            grid.innerHTML = activeEmployees.map(emp => {
+                const record = appData.attendance.find(a => a.employeeId === emp.id && a.date === displayDate);
+                const status = record?.status || '';
+                return `
+          <div class="attendance-card">
+            <div class="attendance-card-header">
+              <div class="attendance-avatar">${getInitials(emp.name)}</div>
+              <div style="flex:1">
+                <div class="attendance-name">${emp.name}</div>
+                <div class="attendance-role">${emp.role}</div>
+              </div>
+            </div>
+            <div class="attendance-buttons">
+              <button class="attendance-btn ${status === 'present' ? 'present' : ''}" onclick="markAttendance('${emp.id}', 'present')">✅<br>Present</button>
+              <button class="attendance-btn ${status === 'half-day' ? 'half-day' : ''}" onclick="markAttendance('${emp.id}', 'half-day')">⏰<br>Half</button>
+              <button class="attendance-btn ${status === 'absent' ? 'absent' : ''}" onclick="markAttendance('${emp.id}', 'absent')">❌<br>Absent</button>
+              <button class="attendance-btn ${status === 'leave' ? 'leave' : ''}" onclick="markAttendance('${emp.id}', 'leave')">🏖️<br>Leave</button>
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        function refreshLoans() {
+            const list = document.getElementById('loans-list');
+            const empty = document.getElementById('loans-empty');
+            const activeLoans = appData.loans.filter(l => l.status === 'approved' && (l.remainingBalance || l.amount) > 0);
+
+            if (activeLoans.length === 0) {
+                list.innerHTML = '';
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            list.innerHTML = activeLoans.map(loan => {
+                const emp = appData.employees.find(e => e.id === loan.employeeId);
+                const remaining = loan.remainingBalance || loan.amount;
+                const paid = loan.amount - remaining;
+                const progress = (paid / loan.amount) * 100;
+                return `
+          <div class="card" style="margin-bottom: var(--space-4)">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom: var(--space-4)">
+              <div style="display:flex; align-items:center; gap:var(--space-3)">
+                <div class="attendance-avatar">${getInitials(emp?.name || '?')}</div>
+                <div>
+                  <h3 style="margin:0">${emp?.name || 'Unknown'}</h3>
+                  <p style="margin:0; color:var(--text-muted); font-size:var(--font-size-sm)">${loan.purpose || 'No reason'}</p>
+                </div>
+              </div>
+              <div style="text-align:right; font-size:var(--font-size-2xl); font-weight:700">${formatCurrency(loan.amount)}</div>
+            </div>
+            <div style="margin-bottom:var(--space-2); display:flex; justify-content:space-between; font-size:var(--font-size-sm)">
+              <span style="color:var(--text-muted)">Repayment Progress</span>
+              <span>${Math.round(progress)}%</span>
+            </div>
+            <div style="height:8px; background:var(--bg-tertiary); border-radius:var(--radius-full); overflow:hidden">
+              <div style="width:${progress}%; height:100%; background:var(--gradient-success); border-radius:var(--radius-full)"></div>
+            </div>
+            <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:var(--space-4); margin-top:var(--space-4); text-align:center">
+              <div><div style="font-weight:600">${formatCurrency(loan.amount)}</div><div style="font-size:var(--font-size-xs); color:var(--text-muted)">TOTAL</div></div>
+              <div><div style="font-weight:600; color:var(--status-success)">${formatCurrency(paid)}</div><div style="font-size:var(--font-size-xs); color:var(--text-muted)">REPAID</div></div>
+              <div><div style="font-weight:600; color:var(--status-warning)">${formatCurrency(remaining)}</div><div style="font-size:var(--font-size-xs); color:var(--text-muted)">REMAINING</div></div>
+            </div>
+          </div>
+        `;
+            }).join('');
+        }
+
+        // Get outstanding loan for employee
+        function getEmployeeLoanBalance(employeeId) {
+            const activeLoans = appData.loans.filter(l =>
+                l.employeeId === employeeId &&
+                l.status === 'approved' &&
+                (l.remainingBalance || l.amount) > 0
+            );
+            return activeLoans.reduce((sum, l) => sum + (l.remainingBalance || l.amount), 0);
+        }
+
+        function refreshSalary() {
+            const table = document.getElementById('salary-table');
+            const empty = document.getElementById('salary-empty');
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+            const today = getTodayDate();
+
+            if (activeEmployees.length === 0) {
+                table.classList.add('hidden');
+                empty.classList.remove('hidden');
+                return;
+            }
+
+            empty.classList.add('hidden');
+            table.classList.remove('hidden');
+
+            let html = `
+                <div class="table-container">
+                    <table class="table" style="width:100%">
+                        <thead>
+                            <tr>
+                                <th style="width:25%">Worker</th>
+                                <th style="width:10%;text-align:center">Work Days</th>
+                                <th style="width:15%;text-align:right">Loan</th>
+                                <th style="width:15%;text-align:right">Salary to Pay</th>
+                                <th style="width:15%;text-align:right">Last Paid</th>
+                                <th style="width:10%;text-align:center">Status</th>
+                                <th style="width:10%;text-align:right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            // For each employee, calculate attendance-based salary
+            activeEmployees.forEach(emp => {
+                // Find the most recent payment for this employee for Last Paid info
+                // Used to display "Last Paid" column info
+                const employeePayments = (appData.salaries || [])
+                    .filter(s => s.employeeId === emp.id)
+                    .sort((a, b) => new Date(b.date) - new Date(a.date));
+
+                const lastPayment = employeePayments[0];
+                const lastPaymentDate = lastPayment ? lastPayment.date : null;
+                const lastPaymentTimestamp = lastPayment?.timestamp || 0;
+
+                // Calculate days worked AFTER the last payment (or all if never paid)
+                let daysWorkedAfterPayment = 0;
+                let daysWorkedTotal = 0;
+
+                // Check last 30 days for attendance (to cover longer periods)
+                for (let i = 0; i < 30; i++) {
+                    const d = new Date();
+                    d.setDate(d.getDate() - i);
+                    const dateStr = d.toISOString().split('T')[0];
+                    const record = appData.attendance.find(a => a.employeeId === emp.id && a.date === dateStr);
+
+                    if (record?.status === 'present') {
+                        daysWorkedTotal += 1;
+                        // Count if:
+                        // 1. No payment exists, OR
+                        // 2. Attendance record was created/modified AFTER the last payment
+                        const isNewOrEdited = !lastPaymentTimestamp || (record.timestamp || 0) > lastPaymentTimestamp;
+                        const isAfterDate = !record.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate); // Fallback
+
+                        if (isNewOrEdited || isAfterDate) {
+                            daysWorkedAfterPayment += 1;
+                        }
+                    }
+                    if (record?.status === 'half-day') {
+                        daysWorkedTotal += 0.5;
+                        const isNewOrEdited = !lastPaymentTimestamp || (record.timestamp || 0) > lastPaymentTimestamp;
+                        const isAfterDate = !record.timestamp && (!lastPaymentDate || dateStr > lastPaymentDate); // Fallback
+
+                        if (isNewOrEdited || isAfterDate) {
+                            daysWorkedAfterPayment += 0.5;
+                        }
+                    }
+                }
+
+                const grossAfterPayment = daysWorkedAfterPayment * emp.dailyWage;
+                const loanBalance = getEmployeeLoanBalance(emp.id);
+                const hasLoan = loanBalance > 0;
+
+                // Format Last Paid info - Show amount and date
+                let lastPaidHtml = '<span style="color:var(--text-muted)">-</span>';
+                if (lastPayment) {
+                    const paidDate = new Date(lastPayment.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+                    lastPaidHtml = `
+                        <div style="font-weight:600;color:var(--status-success)">${formatCurrency(lastPayment.amount)}</div>
+                        <div style="font-size:10px;color:var(--text-muted)">${paidDate}</div>
+                    `;
+                }
+
+                // Determine Status and Action Button state
+                const isPending = grossAfterPayment > 0;
+                const statusHtml = isPending
+                    ? `<span class="badge badge-warning">Pending</span>`
+                    : `<span class="badge badge-success">Paid</span>`;
+
+                const btnDisabled = !isPending ? 'disabled style="opacity:0.5;cursor:not-allowed"' : '';
+                const btnClass = isPending ? 'btn-primary' : 'btn-secondary';
+
+                html += `
+                    <tr>
+                        <td>
+                            <div style="display:flex;align-items:center;gap:var(--space-3)">
+                                <div class="attendance-avatar" style="width:32px;height:32px;font-size:var(--font-size-xs)">${getInitials(emp.name)}</div>
+                                <div>
+                                    <div style="font-weight:500">${emp.name}</div>
+                                    <div style="font-size:var(--font-size-xs);color:var(--text-muted)">${emp.role}</div>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="text-align:center;font-weight:500">${daysWorkedAfterPayment}</td>
+                        <td style="text-align:right">
+                            ${hasLoan ? `<span style="color:var(--status-warning);font-weight:500">${formatCurrency(loanBalance)}</span>` : '-'}
+                        </td>
+                        <td style="text-align:right;font-weight:600;color:${isPending ? 'var(--text-main)' : 'var(--text-muted)'}">
+                            ${formatCurrency(grossAfterPayment)}
+                        </td>
+                        <td style="text-align:right">${lastPaidHtml}</td>
+                        <td style="text-align:center">${statusHtml}</td>
+                        <td style="text-align:right">
+                            <button class="btn ${btnClass} btn-sm" 
+                                onclick="openPaymentModal('${emp.id}', ${grossAfterPayment}, ${loanBalance})"
+                                ${btnDisabled}>
+                                💵 Pay
+                            </button>
+                        </td>
+                    </tr>
+                `;
+            });
+
+            html += `</tbody></table></div>`;
+            table.innerHTML = html;
+        }
+
+        // ========== HISTORY FUNCTIONS ==========
+        let currentHistoryTab = 'payments';
+
+        function switchHistoryTab(tab) {
+            currentHistoryTab = tab;
+            document.getElementById('tab-payments').classList.toggle('active', tab === 'payments');
+            document.getElementById('tab-loans-history').classList.toggle('active', tab === 'loans');
+            document.getElementById('tab-attendance-history').classList.toggle('active', tab === 'attendance');
+
+            document.getElementById('history-payments').classList.toggle('hidden', tab !== 'payments');
+            document.getElementById('history-loans').classList.toggle('hidden', tab !== 'loans');
+            document.getElementById('history-attendance').classList.toggle('hidden', tab !== 'attendance');
+
+            refreshHistory();
+        }
+
+        function refreshHistory() {
+            refreshPaymentHistory();
+            refreshLoanHistory();
+            refreshAttendanceHistory();
+        }
+
+        function refreshPaymentHistory() {
+            const container = document.getElementById('history-payments');
+            const payments = (appData.salaries || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (payments.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center;padding:var(--space-8);">
+                        <div style="font-size:48px;margin-bottom:var(--space-4);">💵</div>
+                        <p style="color:var(--text-muted);">No payment history yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group payments by date
+            const groupedPayments = {};
+            payments.forEach(payment => {
+                if (!groupedPayments[payment.date]) {
+                    groupedPayments[payment.date] = [];
+                }
+                groupedPayments[payment.date].push(payment);
+            });
+
+            let html = '';
+            Object.keys(groupedPayments).sort((a, b) => new Date(b) - new Date(a)).forEach(date => {
+                const datePayments = groupedPayments[date];
+                const totalForDate = datePayments.reduce((sum, p) => sum + p.amount, 0);
+                const formattedDate = new Date(date).toLocaleDateString('en-IN', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+
+                html += `
+                    <div class="card" style="margin-bottom:var(--space-4);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+                            <h4 style="margin:0;">${formattedDate}</h4>
+                            <span class="badge badge-success">${formatCurrency(totalForDate)}</span>
+                        </div>
+                        <div style="display:grid;gap:var(--space-3);">
+                `;
+
+                datePayments.forEach(payment => {
+                    const emp = appData.employees.find(e => e.id === payment.employeeId);
+                    const deductionInfo = payment.deductions && payment.deductions.length > 0
+                        ? `<span style="color:var(--status-warning);font-size:var(--font-size-xs);">(-${formatCurrency(payment.deductions[0].amount)} loan)</span>`
+                        : '';
+
+                    html += `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);background:var(--bg-tertiary);border-radius:var(--radius-md);">
+                            <div style="display:flex;align-items:center;gap:var(--space-3);">
+                                <div class="attendance-avatar" style="width:32px;height:32px;font-size:var(--font-size-xs)">${getInitials(emp?.name || '?')}</div>
+                                <div>
+                                    <div style="font-weight:500;">${emp?.name || 'Unknown'}</div>
+                                    <div style="font-size:var(--font-size-xs);color:var(--text-muted);">${emp?.role || ''}</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-weight:600;color:var(--status-success);">${formatCurrency(payment.amount)}</div>
+                                ${deductionInfo}
+                            </div>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function refreshLoanHistory() {
+            const container = document.getElementById('history-loans');
+            const loans = (appData.loans || []).sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+
+            if (loans.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center;padding:var(--space-8);">
+                        <div style="font-size:48px;margin-bottom:var(--space-4);">💰</div>
+                        <p style="color:var(--text-muted);">No loan history yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '<div style="display:grid;gap:var(--space-4);">';
+
+            loans.forEach(loan => {
+                const emp = appData.employees.find(e => e.id === loan.employeeId);
+                const remaining = loan.remainingBalance !== undefined ? loan.remainingBalance : loan.amount;
+                const paid = loan.amount - remaining;
+                const progress = (paid / loan.amount) * 100;
+                const statusBadge = loan.status === 'paid'
+                    ? '<span class="badge badge-success">Fully Paid</span>'
+                    : '<span class="badge badge-warning">Active</span>';
+                const formattedDate = new Date(loan.requestDate).toLocaleDateString('en-IN', {
+                    day: 'numeric', month: 'short', year: 'numeric'
+                });
+
+                html += `
+                    <div class="card">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+                            <div style="display:flex;align-items:center;gap:var(--space-3);">
+                                <div class="attendance-avatar">${getInitials(emp?.name || '?')}</div>
+                                <div>
+                                    <div style="font-weight:600;">${emp?.name || 'Unknown'}</div>
+                                    <div style="font-size:var(--font-size-xs);color:var(--text-muted);">${loan.purpose || 'No reason'} • ${formattedDate}</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                ${statusBadge}
+                                <div style="font-size:var(--font-size-2xl);font-weight:700;margin-top:var(--space-2);">${formatCurrency(loan.amount)}</div>
+                            </div>
+                        </div>
+                        <div style="margin-bottom:var(--space-2);display:flex;justify-content:space-between;font-size:var(--font-size-sm);">
+                            <span style="color:var(--text-muted);">Repayment Progress</span>
+                            <span>${Math.round(progress)}%</span>
+                        </div>
+                        <div style="height:8px;background:var(--bg-tertiary);border-radius:var(--radius-full);overflow:hidden;margin-bottom:var(--space-4);">
+                            <div style="width:${progress}%;height:100%;background:var(--gradient-success);border-radius:var(--radius-full);"></div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:var(--space-4);text-align:center;">
+                            <div><div style="font-weight:600;">${formatCurrency(loan.amount)}</div><div style="font-size:var(--font-size-xs);color:var(--text-muted);">TOTAL</div></div>
+                            <div><div style="font-weight:600;color:var(--status-success);">${formatCurrency(paid)}</div><div style="font-size:var(--font-size-xs);color:var(--text-muted);">REPAID</div></div>
+                            <div><div style="font-weight:600;color:var(--status-warning);">${formatCurrency(remaining)}</div><div style="font-size:var(--font-size-xs);color:var(--text-muted);">REMAINING</div></div>
+                        </div>
+                        ${loan.deductions && loan.deductions.length > 0 ? `
+                            <div style="margin-top:var(--space-4);padding-top:var(--space-4);border-top:1px solid var(--border-primary);">
+                                <div style="font-size:var(--font-size-sm);font-weight:600;margin-bottom:var(--space-2);">Repayment History</div>
+                                <div style="max-height:150px;overflow-y:auto;">
+                                    ${loan.deductions.map(d => `
+                                        <div style="display:flex;justify-content:space-between;font-size:var(--font-size-sm);padding:var(--space-2) 0;border-bottom:1px solid var(--border-primary);">
+                                            <span style="color:var(--text-muted);">${new Date(d.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
+                                            <span style="color:var(--status-success);">-${formatCurrency(d.amount)}</span>
+                                        </div>
+                                    `).join('')}
+                                </div>
+                            </div>
+                        ` : ''}
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            container.innerHTML = html;
+        }
+
+        function refreshAttendanceHistory() {
+            const container = document.getElementById('history-attendance');
+            const attendance = (appData.attendance || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (attendance.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center;padding:var(--space-8);">
+                        <div style="font-size:48px;margin-bottom:var(--space-4);">📋</div>
+                        <p style="color:var(--text-muted);">No attendance history yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by date
+            const groupedAttendance = {};
+            attendance.forEach(record => {
+                if (!groupedAttendance[record.date]) {
+                    groupedAttendance[record.date] = [];
+                }
+                groupedAttendance[record.date].push(record);
+            });
+
+            const statusColors = {
+                'present': 'var(--status-present)',
+                'half-day': 'var(--status-half-day)',
+                'absent': 'var(--status-absent)',
+                'leave': 'var(--status-leave)'
+            };
+            const statusIcons = {
+                'present': '✅',
+                'half-day': '⏰',
+                'absent': '❌',
+                'leave': '🏖️'
+            };
+
+            let html = '';
+            const sortedDates = Object.keys(groupedAttendance).sort((a, b) => new Date(b) - new Date(a)).slice(0, 30); // Last 30 days
+
+            sortedDates.forEach(date => {
+                const records = groupedAttendance[date];
+                const formattedDate = new Date(date).toLocaleDateString('en-IN', {
+                    weekday: 'long', day: 'numeric', month: 'long', year: 'numeric'
+                });
+
+                const presentCount = records.filter(r => r.status === 'present').length;
+                const halfDayCount = records.filter(r => r.status === 'half-day').length;
+                const absentCount = records.filter(r => r.status === 'absent').length;
+                const leaveCount = records.filter(r => r.status === 'leave').length;
+
+                html += `
+                    <div class="card" style="margin-bottom:var(--space-4);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-4);">
+                            <h4 style="margin:0;">${formattedDate}</h4>
+                            <div style="display:flex;gap:var(--space-2);">
+                                ${presentCount > 0 ? `<span class="badge badge-success">${presentCount} Present</span>` : ''}
+                                ${halfDayCount > 0 ? `<span class="badge badge-info">${halfDayCount} Half</span>` : ''}
+                                ${absentCount > 0 ? `<span class="badge badge-danger">${absentCount} Absent</span>` : ''}
+                                ${leaveCount > 0 ? `<span class="badge badge-warning">${leaveCount} Leave</span>` : ''}
+                            </div>
+                        </div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:var(--space-2);">
+                `;
+
+                records.forEach(record => {
+                    const emp = appData.employees.find(e => e.id === record.employeeId);
+                    html += `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-2);background:var(--bg-tertiary);border-radius:var(--radius-md);">
+                            <div style="display:flex;align-items:center;gap:var(--space-2);">
+                                <div class="attendance-avatar" style="width:24px;height:24px;font-size:10px;">${getInitials(emp?.name || '?')}</div>
+                                <span style="font-size:var(--font-size-sm);">${emp?.name || 'Unknown'}</span>
+                            </div>
+                            <span style="color:${statusColors[record.status]};font-size:var(--font-size-sm);">
+                                ${statusIcons[record.status]} ${record.status.charAt(0).toUpperCase() + record.status.slice(1)}
+                            </span>
+                        </div>
+                    `;
+                });
+
+                html += `</div></div>`;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function refreshHistory() {
+            refreshPaymentHistory();
+            refreshLoans(); // Make sure this updates the history-loans if needed
+            refreshAttendanceHistory();
+        }
+
+        function refreshPaymentHistory() {
+            const container = document.getElementById('history-payments');
+            const salaries = (appData.salaries || []).sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            if (salaries.length === 0) {
+                container.innerHTML = `
+                    <div class="card" style="text-align:center;padding:var(--space-8);">
+                        <div style="font-size:48px;margin-bottom:var(--space-4);">💸</div>
+                        <p style="color:var(--text-muted);">No payment history yet.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // Group by Month
+            const groupedSalaries = {};
+            salaries.forEach(s => {
+                const date = new Date(s.date);
+                const monthKey = date.toLocaleString('default', { month: 'long', year: 'numeric' });
+                if (!groupedSalaries[monthKey]) {
+                    groupedSalaries[monthKey] = [];
+                }
+                groupedSalaries[monthKey].push(s);
+            });
+
+            let html = '';
+            for (const [month, records] of Object.entries(groupedSalaries)) {
+                const totalMonth = records.reduce((sum, r) => sum + r.amount, 0);
+
+                html += `
+                    <div style="margin-bottom: var(--space-6);">
+                        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:var(--space-3);padding-bottom:var(--space-2);border-bottom:1px solid var(--border-primary);">
+                            <h3 style="font-size:var(--font-size-md);margin:0;">${month}</h3>
+                            <span class="badge badge-success">Total: ${formatCurrency(totalMonth)}</span>
+                        </div>
+                        <div class="card" style="padding:0;">
+                `;
+
+                html += records.map(record => {
+                    const emp = appData.employees.find(e => e.id === record.employeeId);
+                    const date = new Date(record.date).toLocaleDateString('en-IN', { day: 'numeric', month: 'short' });
+                    const hasDeductions = record.deductions && record.deductions.length > 0;
+                    const deductionHtml = hasDeductions
+                        ? `<div style="font-size:11px;color:var(--status-warning);">Includes deduction: ${formatCurrency(record.deductions[0].amount)}</div>`
+                        : '';
+
+                    return `
+                        <div style="display:flex;justify-content:space-between;align-items:center;padding:var(--space-3);border-bottom:1px solid var(--border-primary);">
+                            <div style="display:flex;align-items:center;gap:var(--space-3);">
+                                <div class="attendance-avatar" style="width:36px;height:36px;font-size:12px;">${getInitials(emp?.name || '?')}</div>
+                                <div>
+                                    <div style="font-weight:600;">${emp?.name || 'Unknown'}</div>
+                                    <div style="font-size:11px;color:var(--text-muted);">${date} • ${emp?.role || ''}</div>
+                                </div>
+                            </div>
+                            <div style="text-align:right;">
+                                <div style="font-weight:700;color:var(--status-success);">${formatCurrency(record.amount)}</div>
+                                ${deductionHtml}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+
+                html += `</div></div>`;
+            }
+
+            container.innerHTML = html;
+        }
+
+        function switchHistoryTab(tabName) {
+            document.querySelectorAll('.history-section').forEach(el => el.classList.add('hidden'));
+            document.querySelectorAll('.tabs .tab').forEach(el => el.classList.remove('active'));
+
+            // Show selected section
+            if (tabName === 'payments') {
+                document.getElementById('history-payments').classList.remove('hidden');
+                document.getElementById('tab-payments').classList.add('active');
+                refreshPaymentHistory();
+            } else if (tabName === 'loans') {
+                document.getElementById('history-loans').classList.remove('hidden');
+                document.getElementById('tab-loans-history').classList.add('active');
+                // We'll rely on refreshLoans() to populate history-loans if possible, 
+                // but since refreshLoans targets 'loans-list' (the main loans page), 
+                // we should probably add logic here or assume user only checks payments for now.
+                // Given the instruction "details of paid should be stored in history page",
+                // I've prioritized payments.
+                // To be safe, let's just show a placeholder or duplicate basic loan history if needed.
+                // For now, let's keep it simple.
+                const container = document.getElementById('history-loans');
+                const loans = (appData.loans || []).sort((a, b) => new Date(b.requestDate) - new Date(a.requestDate));
+                if (loans.length === 0) {
+                    container.innerHTML = '<div class="card" style="text-align:center;padding:var(--space-8);color:var(--text-muted);"><p>No loan history.</p></div>';
+                } else {
+                    let html = '';
+                    loans.forEach(loan => {
+                        const emp = appData.employees.find(e => e.id === loan.employeeId);
+                        const formattedDate = new Date(loan.requestDate).toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+                        const statusBadge = loan.status === 'paid' ? '<span class="badge badge-success">Paid Off</span>' :
+                            loan.status === 'approved' ? '<span class="badge badge-warning">Active</span>' :
+                                '<span class="badge badge-ghost">Pending</span>';
+
+                        html += `
+                            <div class="card">
+                                <div style="display:flex;justify-content:space-between;align-items:center;">
+                                     <div style="display:flex;align-items:center;gap:var(--space-3);">
+                                        <div class="attendance-avatar">${getInitials(emp?.name || '?')}</div>
+                                        <div>
+                                            <div style="font-weight:600;">${emp?.name || 'Unknown'}</div>
+                                            <div style="font-size:11px;color:var(--text-muted);">${loan.purpose || 'Loan'} • ${formattedDate}</div>
+                                        </div>
+                                    </div>
+                                    <div style="text-align:right;">
+                                        ${statusBadge}
+                                        <div style="font-weight:700;">${formatCurrency(loan.amount)}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    container.innerHTML = html;
+                }
+            } else if (tabName === 'attendance') {
+                document.getElementById('history-attendance').classList.remove('hidden');
+                document.getElementById('tab-attendance-history').classList.add('active');
+                refreshAttendanceHistory();
+            }
+        }
+
+        // ========== EMPLOYEE ACTIONS ==========
+        let editingEmployeeId = null;
+
+        function openEmployeeModal(id = null) {
+            editingEmployeeId = id;
+            const modal = document.getElementById('employee-modal');
+            const title = document.getElementById('employee-modal-title');
+
+            if (id) {
+                const emp = appData.employees.find(e => e.id === id);
+                if (emp) {
+                    document.getElementById('emp-name').value = emp.name;
+                    document.getElementById('emp-role').value = emp.role;
+                    document.getElementById('emp-wage').value = emp.dailyWage;
+                    document.getElementById('emp-phone').value = emp.phone || '';
+                    document.getElementById('emp-upi').value = emp.upiId || '';
+                    title.textContent = 'Edit Employee';
+                }
+            } else {
+                document.getElementById('emp-name').value = '';
+                document.getElementById('emp-role').value = 'Mason';
+                document.getElementById('emp-wage').value = 800;
+                document.getElementById('emp-phone').value = '';
+                document.getElementById('emp-upi').value = '';
+                title.textContent = 'Add New Employee';
+            }
+            modal.classList.remove('hidden');
+        }
+
+        function closeEmployeeModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('employee-modal').classList.add('hidden');
+            editingEmployeeId = null;
+        }
+
+        function updateWageFromRole() {
+            const select = document.getElementById('emp-role');
+            const wage = select.options[select.selectedIndex].dataset.wage;
+            document.getElementById('emp-wage').value = wage;
+        }
+
+        function saveEmployee(e) {
+            e.preventDefault();
+            const name = document.getElementById('emp-name').value.trim();
+            const role = document.getElementById('emp-role').value;
+            const dailyWage = Number(document.getElementById('emp-wage').value);
+            const phone = document.getElementById('emp-phone').value.trim();
+            const upiId = document.getElementById('emp-upi').value.trim();
+
+            if (!name) { alert('Please enter name'); return; }
+
+            if (editingEmployeeId) {
+                const emp = appData.employees.find(e => e.id === editingEmployeeId);
+                if (emp) {
+                    emp.name = name;
+                    emp.role = role;
+                    emp.dailyWage = dailyWage;
+                    emp.phone = phone;
+                    emp.upiId = upiId;
+                }
+            } else {
+                appData.employees.push({
+                    id: generateId(),
+                    name, role, dailyWage, phone, upiId,
+                    joiningDate: getTodayDate(),
+                    status: 'active'
+                });
+            }
+
+            saveData();
+            closeEmployeeModal();
+            refreshEmployees();
+            refreshDashboard();
+        }
+
+        function editEmployee(id) {
+            openEmployeeModal(id);
+        }
+
+        function archiveEmployee(id) {
+            if (confirm('Archive this employee?')) {
+                const emp = appData.employees.find(e => e.id === id);
+                if (emp) emp.status = 'archived';
+                saveData();
+                refreshEmployees();
+                refreshDashboard();
+            }
+        }
+
+        // ========== ATTENDANCE ACTIONS ==========
+        let currentAttendanceView = 'today';
+        let calendarMonth = new Date().getMonth();
+        let calendarYear = new Date().getFullYear();
+        let selectedCalendarDate = null;
+        let currentMarkingDate = getTodayDate();
+
+        function initCalendar() {
+            const yearSelect = document.getElementById('calendar-year-select');
+            const currentYear = new Date().getFullYear();
+            let options = '';
+            for (let i = currentYear - 5; i <= currentYear + 2; i++) {
+                options += `<option value="${i}" ${i === currentYear ? 'selected' : ''}>${i}</option>`;
+            }
+            if (yearSelect) yearSelect.innerHTML = options;
+            renderCalendar();
+        }
+
+        function changeCalendarYear() {
+            const yearSelect = document.getElementById('calendar-year-select');
+            if (yearSelect) calendarYear = Number(yearSelect.value);
+            renderCalendar();
+        }
+
+        function switchAttendanceView(view) {
+            currentAttendanceView = view;
+            document.getElementById('tab-today').classList.toggle('active', view === 'today');
+            document.getElementById('tab-calendar').classList.toggle('active', view === 'calendar');
+            document.getElementById('attendance-today-view').classList.toggle('hidden', view !== 'today');
+            document.getElementById('attendance-calendar-view').classList.toggle('hidden', view !== 'calendar');
+
+            if (view === 'calendar') {
+                const yearSelect = document.getElementById('calendar-year-select');
+                if (yearSelect && yearSelect.children.length === 0) {
+                    initCalendar();
+                } else {
+                    renderCalendar();
+                }
+            } else if (view === 'today') {
+                openAttendanceMarking(getTodayDate());
+                // Reset title to "Today" if needed, but openAttendanceMarking handles formatting
+            }
+        }
+
+        function openAttendanceMarking(dateStr) {
+            currentMarkingDate = dateStr;
+            const date = new Date(dateStr);
+            const formattedDate = date.toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+
+            const titleEl = document.getElementById('marking-view-date-title');
+            if (titleEl) titleEl.textContent = formattedDate;
+
+            // Switch tab UI manually if called from calendar
+            document.getElementById('tab-today').classList.add('active');
+            document.getElementById('tab-calendar').classList.remove('active');
+            document.getElementById('attendance-today-view').classList.remove('hidden');
+            document.getElementById('attendance-calendar-view').classList.add('hidden');
+
+            refreshAttendance();
+        }
+
+        function navigateCalendarMonth(direction) {
+            calendarMonth += direction;
+            if (calendarMonth > 11) {
+                calendarMonth = 0;
+                calendarYear++;
+            } else if (calendarMonth < 0) {
+                calendarMonth = 11;
+                calendarYear--;
+            }
+            // Sync dropdown
+            const yearSelect = document.getElementById('calendar-year-select');
+            if (yearSelect) yearSelect.value = calendarYear;
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const grid = document.getElementById('calendar-grid');
+            const titleEl = document.getElementById('calendar-month-title');
+
+            const monthNames = ['January', 'February', 'March', 'April', 'May', 'June',
+                'July', 'August', 'September', 'October', 'November', 'December'];
+            const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+
+            titleEl.textContent = `${monthNames[calendarMonth]} ${calendarYear}`;
+
+            // Get first day of month and number of days
+            const firstDay = new Date(calendarYear, calendarMonth, 1).getDay();
+            const daysInMonth = new Date(calendarYear, calendarMonth + 1, 0).getDate();
+            const today = getTodayDate();
+
+            let html = '';
+
+            // Day headers
+            dayNames.forEach(day => {
+                html += `<div style="padding: var(--space-2); text-align: center; font-weight: 600; color: var(--text-muted); font-size: var(--font-size-xs);">${day}</div>`;
+            });
+
+            // Empty cells before first day
+            for (let i = 0; i < firstDay; i++) {
+                html += `<div style="padding: var(--space-2);"></div>`;
+            }
+
+            // Days of month
+            for (let day = 1; day <= daysInMonth; day++) {
+                const dateStr = `${calendarYear}-${String(calendarMonth + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+                const isToday = dateStr === today;
+                const isSelected = dateStr === selectedCalendarDate;
+                const isFuture = new Date(dateStr) > new Date(today);
+
+                // Get attendance summary for this day
+                const dayAttendance = appData.attendance.filter(a => a.date === dateStr);
+                const presentCount = dayAttendance.filter(a => a.status === 'present').length;
+                const halfDayCount = dayAttendance.filter(a => a.status === 'half-day').length;
+                const absentCount = dayAttendance.filter(a => a.status === 'absent').length;
+                const leaveCount = dayAttendance.filter(a => a.status === 'leave').length;
+                const hasData = dayAttendance.length > 0;
+
+                let bgColor = 'var(--bg-tertiary)';
+                let dotHtml = '';
+
+                if (hasData) {
+                    dotHtml = '<div style="display: flex; gap: 2px; justify-content: center; margin-top: 2px;">';
+                    if (presentCount > 0) dotHtml += `<div style="width: 6px; height: 6px; background: var(--status-present); border-radius: 50%;"></div>`;
+                    if (halfDayCount > 0) dotHtml += `<div style="width: 6px; height: 6px; background: var(--status-half-day); border-radius: 50%;"></div>`;
+                    if (absentCount > 0) dotHtml += `<div style="width: 6px; height: 6px; background: var(--status-absent); border-radius: 50%;"></div>`;
+                    if (leaveCount > 0) dotHtml += `<div style="width: 6px; height: 6px; background: var(--status-leave); border-radius: 50%;"></div>`;
+                    dotHtml += '</div>';
+                }
+
+                html += `
+                    <div onclick="selectCalendarDate('${dateStr}')" 
+                         style="padding: var(--space-2); text-align: center; cursor: ${isFuture ? 'not-allowed' : 'pointer'}; 
+                                background: ${isSelected ? 'var(--primary-600)' : isToday ? 'var(--bg-card-hover)' : 'var(--bg-tertiary)'}; 
+                                border-radius: var(--radius-md); 
+                                opacity: ${isFuture ? '0.4' : '1'};
+                                border: ${isToday ? '2px solid var(--primary-400)' : '2px solid transparent'};
+                                transition: all 0.2s;">
+                        <div style="font-weight: ${isToday ? '700' : '500'}; font-size: var(--font-size-sm);">${day}</div>
+                        ${dotHtml}
+                    </div>
+                `;
+            }
+
+            grid.innerHTML = html;
+        }
+
+        function selectCalendarDate(dateStr) {
+            const today = getTodayDate();
+            if (new Date(dateStr) > new Date(today)) return; // Don't allow future dates
+
+            selectedCalendarDate = dateStr;
+            renderCalendar();
+            showCalendarDayDetails(dateStr);
+        }
+
+        function showCalendarDayDetails(dateStr) {
+            const titleEl = document.getElementById('calendar-selected-title');
+            const detailsEl = document.getElementById('calendar-day-details');
+
+            const date = new Date(dateStr);
+            const dayName = date.toLocaleDateString('en-US', { weekday: 'long' });
+            const formattedDate = date.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' });
+
+            titleEl.textContent = `${dayName}, ${formattedDate}`;
+
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+            const dayAttendance = appData.attendance.filter(a => a.date === dateStr);
+
+            if (activeEmployees.length === 0) {
+                detailsEl.innerHTML = '<p style="color: var(--text-muted);">No employees in the system.</p>';
+                return;
+            }
+
+            // Summary counts
+            const presentCount = dayAttendance.filter(a => a.status === 'present').length;
+            const halfDayCount = dayAttendance.filter(a => a.status === 'half-day').length;
+            const absentCount = dayAttendance.filter(a => a.status === 'absent').length;
+            const leaveCount = dayAttendance.filter(a => a.status === 'leave').length;
+            const notMarkedCount = activeEmployees.length - dayAttendance.length;
+
+            let html = `
+                <div style="display:flex; justify-content:center; margin-bottom:var(--space-4);">
+                   <button class="btn btn-primary" onclick="openAttendanceMarking('${dateStr}')" style="width:100%">
+                     ✏️ Edit Attendance for this Date
+                   </button>
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: var(--space-2); margin-bottom: var(--space-4);">
+                    <div style="padding: var(--space-2); background: rgba(16, 185, 129, 0.1); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--status-present);">${presentCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Present</div>
+                    </div>
+                    <div style="padding: var(--space-2); background: rgba(6, 182, 212, 0.1); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--status-half-day);">${halfDayCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Half Day</div>
+                    </div>
+                    <div style="padding: var(--space-2); background: rgba(239, 68, 68, 0.1); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--status-absent);">${absentCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Absent</div>
+                    </div>
+                    <div style="padding: var(--space-2); background: rgba(245, 158, 11, 0.1); border-radius: var(--radius-md); text-align: center;">
+                        <div style="font-size: var(--font-size-lg); font-weight: 700; color: var(--status-leave);">${leaveCount}</div>
+                        <div style="font-size: var(--font-size-xs); color: var(--text-muted);">Leave</div>
+                    </div>
+                </div>
+            `;
+
+            if (notMarkedCount > 0) {
+                html += `<p style="font-size: var(--font-size-xs); color: var(--text-muted); margin-bottom: var(--space-4);">${notMarkedCount} employees not marked</p>`;
+            }
+
+            // List each employee's attendance
+            html += '<div style="max-height: 300px; overflow-y: auto;">';
+            activeEmployees.forEach(emp => {
+                const record = dayAttendance.find(a => a.employeeId === emp.id);
+                const status = record?.status || 'not marked';
+                const statusColors = {
+                    'present': 'var(--status-present)',
+                    'half-day': 'var(--status-half-day)',
+                    'absent': 'var(--status-absent)',
+                    'leave': 'var(--status-leave)',
+                    'not marked': 'var(--text-muted)'
+                };
+                const statusIcons = {
+                    'present': '✅',
+                    'half-day': '⏰',
+                    'absent': '❌',
+                    'leave': '🏖️',
+                    'not marked': '—'
+                };
+
+                html += `
+                    <div style="display: flex; justify-content: space-between; align-items: center; padding: var(--space-2) 0; border-bottom: 1px solid var(--border-primary);">
+                        <div style="display: flex; align-items: center; gap: var(--space-2);">
+                            <div class="attendance-avatar" style="width: 28px; height: 28px; font-size: 10px;">${getInitials(emp.name)}</div>
+                            <span style="font-size: var(--font-size-sm);">${emp.name}</span>
+                        </div>
+                        <span style="color: ${statusColors[status]}; font-size: var(--font-size-sm);">
+                            ${statusIcons[status]} ${status.charAt(0).toUpperCase() + status.slice(1)}
+                        </span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+
+            detailsEl.innerHTML = html;
+        }
+
+        function markAttendance(employeeId, status) {
+            const date = typeof currentMarkingDate !== 'undefined' ? currentMarkingDate : getTodayDate();
+            const existing = appData.attendance.findIndex(a => a.employeeId === employeeId && a.date === date);
+
+            if (existing >= 0) {
+                appData.attendance[existing].status = status;
+                appData.attendance[existing].timestamp = Date.now(); // Update timestamp on edit
+            } else {
+                appData.attendance.push({
+                    id: generateId(),
+                    employeeId, date, status,
+                    hoursWorked: status === 'present' ? 8 : status === 'half-day' ? 4 : 0,
+                    overtimeHours: 0,
+                    timestamp: Date.now() // Track when attendance was marked
+                });
+            }
+
+            saveData();
+            refreshAttendance();
+            refreshDashboard();
+            refreshSalary(); // Update salary page when attendance changes
+        }
+
+        function saveAttendanceAndConfirm() {
+            const date = typeof currentMarkingDate !== 'undefined' ? currentMarkingDate : getTodayDate();
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+            const dayAttendance = appData.attendance.filter(a => a.date === date);
+
+            const presentCount = dayAttendance.filter(a => a.status === 'present').length;
+            const halfDayCount = dayAttendance.filter(a => a.status === 'half-day').length;
+            const absentCount = dayAttendance.filter(a => a.status === 'absent').length;
+            const markedCount = dayAttendance.length;
+
+            saveData();
+            refreshDashboard();
+            refreshSalary();
+
+            const dateFormatted = new Date(date).toLocaleDateString('en-IN', { weekday: 'long', day: 'numeric', month: 'short' });
+
+            alert(`✅ Attendance Saved!\n\n📅 ${dateFormatted}\n\n✅ Present: ${presentCount}\n⏰ Half-Day: ${halfDayCount}\n❌ Absent: ${absentCount}\n📊 Total Marked: ${markedCount}/${activeEmployees.length}`);
+        }
+
+        // ========== LOAN ACTIONS ==========
+        function openLoanModal() {
+            const select = document.getElementById('loan-employee');
+            const activeEmployees = appData.employees.filter(e => e.status !== 'archived');
+            select.innerHTML = activeEmployees.map(e => `<option value="${e.id}">${e.name}</option>`).join('');
+            document.getElementById('loan-amount').value = '';
+            document.getElementById('loan-purpose').value = '';
+            document.getElementById('loan-modal').classList.remove('hidden');
+        }
+
+        function closeLoanModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('loan-modal').classList.add('hidden');
+        }
+
+        function saveLoan(e) {
+            e.preventDefault();
+            const employeeId = document.getElementById('loan-employee').value;
+            const amount = Number(document.getElementById('loan-amount').value);
+            const purpose = document.getElementById('loan-purpose').value.trim();
+
+            if (!employeeId || !amount) { alert('Please fill all required fields'); return; }
+
+            appData.loans.push({
+                id: generateId(),
+                employeeId, amount, purpose,
+                requestDate: getTodayDate(),
+                status: 'approved',
+                remainingBalance: amount,
+                deductions: []
+            });
+
+            saveData();
+            closeLoanModal();
+            refreshLoans();
+            refreshDashboard();
+        }
+
+        // ========== SALARY/PAYMENT ACTIONS ==========
+        let currentPayment = { employeeId: null, gross: 0, loanBalance: 0, deductAmount: 0, willDeduct: false, method: 'gpay' };
+
+        function openPaymentModal(employeeId, gross, loanBalance) {
+            const emp = appData.employees.find(e => e.id === employeeId);
+            if (!emp) return;
+
+            currentPayment = { employeeId, gross, loanBalance, deductAmount: 0, willDeduct: false, method: 'gpay' };
+
+            // Set employee info with new layout (show UPI if available)
+            const upiDisplay = emp.upiId
+                ? `<span style="color:var(--status-success)">💳 ${emp.upiId}</span>`
+                : `<span style="color:var(--status-warning)">⚠️ No UPI ID</span>`;
+            document.getElementById('payment-employee-info').innerHTML = `
+                <div class="attendance-avatar" style="width:56px;height:56px;font-size:var(--font-size-xl)">${getInitials(emp.name)}</div>
+                <div>
+                    <h3 style="margin:0;font-size:var(--font-size-lg)">${emp.name}</h3>
+                    <p style="margin:0;color:var(--text-muted);font-size:var(--font-size-sm)">${emp.role} • ${upiDisplay}</p>
+                </div>
+            `;
+
+            // Set payment summary
+            document.getElementById('payment-gross').textContent = formatCurrency(gross);
+            document.getElementById('payment-final').textContent = formatCurrency(gross);
+            document.getElementById('proceed-amount').textContent = formatCurrency(gross);
+
+            // Reset payment method selection
+            document.querySelectorAll('.payment-method-card').forEach(card => card.classList.remove('selected'));
+            document.querySelector('.payment-method-card[onclick*="gpay"]').classList.add('selected');
+
+            // Show/hide loan section
+            const loanSection = document.getElementById('loan-deduction-section');
+            const loanRow = document.getElementById('payment-loan-row');
+            const deductionRow = document.getElementById('payment-deduction-row');
+
+            if (loanBalance > 0) {
+                loanSection.classList.remove('hidden');
+                loanRow.style.display = 'flex';
+                document.getElementById('payment-loan-balance').textContent = formatCurrency(loanBalance);
+
+                // Suggest 30% of gross or remaining balance, whichever is less
+                const suggestedDeduction = Math.min(Math.round(gross * 0.3), loanBalance);
+                document.getElementById('deduction-amount').value = suggestedDeduction;
+                document.getElementById('deduction-hint').textContent = `Max: ${formatCurrency(Math.min(gross, loanBalance))}`;
+
+                // Reset deduction state
+                document.getElementById('btn-deduct-yes').classList.remove('btn-primary');
+                document.getElementById('btn-deduct-yes').classList.add('btn-secondary');
+                document.getElementById('btn-deduct-no').classList.remove('btn-primary');
+                document.getElementById('btn-deduct-no').classList.add('btn-ghost');
+                document.getElementById('deduction-amount-section').classList.add('hidden');
+                deductionRow.style.display = 'none';
+            } else {
+                loanSection.classList.add('hidden');
+                loanRow.style.display = 'none';
+                deductionRow.style.display = 'none';
+            }
+
+            document.getElementById('payment-modal').classList.remove('hidden');
+        }
+
+        // Payment method selection
+        function selectPaymentMethod(method) {
+            currentPayment.method = method;
+            document.querySelectorAll('.payment-method-card').forEach(card => card.classList.remove('selected'));
+            document.querySelector(`.payment-method-card[onclick*="${method}"]`).classList.add('selected');
+        }
+
+        // Proceed to payment - RedBus style (direct GPay open)
+        function proceedToPayment() {
+            const { employeeId, gross, deductAmount, willDeduct, method } = currentPayment;
+            const emp = appData.employees.find(e => e.id === employeeId);
+            if (!emp) return;
+
+            const finalPay = gross - deductAmount;
+
+            if (method === 'cash') {
+                // For cash, directly record and show success
+                processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct);
+                showPaymentSuccess(emp.name, finalPay);
+                return;
+            }
+
+            // For UPI methods, check if worker has UPI ID
+            if (!emp.upiId) {
+                if (confirm(`⚠️ ${emp.name} doesn't have a UPI ID.\n\n• Click OK to add their UPI ID now\n• Click Cancel to pay via Cash`)) {
+                    closePaymentModal();
+                    editEmployee(employeeId);
+                    alert('💡 Add worker\'s UPI ID (e.g., 9876543210@ybl), then try payment again.');
+                    return;
+                } else {
+                    selectPaymentMethod('cash');
+                    processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct);
+                    showPaymentSuccess(emp.name, finalPay);
+                    return;
+                }
+            }
+
+            // Build UPI deep link based on selected method
+            let upiUrl = `upi://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+
+            // Add app-specific package hints for better app opening
+            if (method === 'gpay') {
+                // Google Pay
+                upiUrl = `gpay://upi/pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+            } else if (method === 'phonepe') {
+                // PhonePe  
+                upiUrl = `phonepe://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+            } else if (method === 'paytm') {
+                // Paytm
+                upiUrl = `paytmmp://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+            }
+
+            // Close payment modal first
+            closePaymentModal();
+
+            // Open the UPI app
+            window.location.href = upiUrl;
+
+            // Record payment and show success after a short delay
+            // (allows time for UPI app to open)
+            setTimeout(() => {
+                processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct);
+                showPaymentSuccess(emp.name, finalPay);
+            }, 1500);
+        }
+
+        // Show payment success overlay with confetti
+        function showPaymentSuccess(empName, amount) {
+            closePaymentModal();
+
+            const successHtml = `
+                <div class="payment-success-overlay" id="payment-success-overlay" onclick="closePaymentSuccess()">
+                    <div class="payment-success-content" onclick="event.stopPropagation()">
+                        <div class="success-checkmark">✓</div>
+                        <div class="success-amount">${formatCurrency(amount)}</div>
+                        <div class="success-message">Payment Successful!</div>
+                        <div class="success-submessage">Salary paid to ${empName}</div>
+                        <button class="btn btn-primary" onclick="closePaymentSuccess()" style="min-width: 150px;">
+                            Done
+                        </button>
+                    </div>
+                </div>
+                <div class="confetti-container" id="confetti-container"></div>
+            `;
+
+            const div = document.createElement('div');
+            div.innerHTML = successHtml;
+            document.body.appendChild(div.firstElementChild);
+            document.body.appendChild(div.firstElementChild);
+
+            // Create confetti
+            createConfetti();
+
+            // Auto-close after 5 seconds
+            setTimeout(() => {
+                closePaymentSuccess();
+            }, 5000);
+        }
+
+        // Create confetti animation
+        function createConfetti() {
+            const container = document.getElementById('confetti-container');
+            if (!container) return;
+
+            const colors = ['#6366f1', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#06b6d4'];
+            const shapes = ['square', 'circle'];
+
+            for (let i = 0; i < 50; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = Math.random() * 100 + '%';
+                confetti.style.animationDelay = Math.random() * 0.5 + 's';
+                confetti.style.animationDuration = (Math.random() * 2 + 2) + 's';
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+
+                if (shapes[Math.floor(Math.random() * shapes.length)] === 'circle') {
+                    confetti.style.borderRadius = '50%';
+                }
+
+                confetti.style.width = (Math.random() * 8 + 6) + 'px';
+                confetti.style.height = confetti.style.width;
+
+                container.appendChild(confetti);
+            }
+        }
+
+        // Close payment success overlay
+        function closePaymentSuccess() {
+            document.getElementById('payment-success-overlay')?.remove();
+            document.getElementById('confetti-container')?.remove();
+            refreshSalary();
+            refreshLoans();
+            refreshDashboard();
+        }
+
+
+        function requestFromOwner() {
+            const { employeeId, gross, deductAmount, willDeduct } = currentPayment;
+            const emp = appData.employees.find(e => e.id === employeeId);
+            if (!emp) return;
+
+            const finalPay = gross - deductAmount;
+            const settings = appData.settings || {};
+            const ownerPhone = settings.ownerPhone || '';
+            const ownerName = settings.ownerName || 'Owner';
+
+            // Construct message
+            let message = `🔔 *Salary Payment Request*\n\n`;
+            message += `👷 Worker: ${emp.name}\n`;
+            message += `💵 Amount: ₹${finalPay.toLocaleString('en-IN')}\n`;
+            if (willDeduct && deductAmount > 0) {
+                message += `📉 Loan Deducted: ₹${deductAmount.toLocaleString('en-IN')}\n`;
+            }
+
+            // Add UPI payment link if worker has UPI
+            let upiLink = '';
+            if (emp.upiId) {
+                upiLink = `upi://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary`;
+                message += `\n💳 Pay to: ${emp.upiId}\n`;
+                message += `\n📲 Tap to pay: ${upiLink}`;
+            } else {
+                message += `\n⚠️ Worker has no UPI ID saved`;
+            }
+
+            const encodedMessage = encodeURIComponent(message);
+
+            // Check if owner phone is configured
+            const hasOwnerPhone = ownerPhone && ownerPhone.length >= 10;
+            const whatsappUrl = hasOwnerPhone
+                ? `https://wa.me/91${ownerPhone}?text=${encodedMessage}`
+                : `https://wa.me/?text=${encodedMessage}`;
+
+            // Show enhanced share modal
+            const modalHtml = `
+                <div id="share-modal" class="modal-overlay" onclick="this.remove()">
+                    <div class="modal" onclick="event.stopPropagation()" style="max-width: 420px;">
+                        <div class="modal-header">
+                            <h3 class="modal-title">📲 Request Payment from Owner</h3>
+                            <button class="btn btn-ghost" onclick="document.getElementById('share-modal').remove()">✕</button>
+                        </div>
+                        <div class="modal-body">
+                            ${hasOwnerPhone ? `
+                                <div style="background:var(--bg-tertiary); padding:var(--space-3); border-radius:var(--radius-md); margin-bottom:var(--space-4); text-align:center;">
+                                    <p style="margin:0; font-size:var(--font-size-sm); color:var(--text-muted);">Sending request to</p>
+                                    <p style="margin:var(--space-1) 0 0 0; font-weight:600;">${ownerName} (${ownerPhone})</p>
+                                </div>
+                            ` : `
+                                <div style="background:rgba(245,158,11,0.1); border:1px solid var(--status-warning); padding:var(--space-3); border-radius:var(--radius-md); margin-bottom:var(--space-4);">
+                                    <p style="margin:0; font-size:var(--font-size-sm); color:var(--status-warning);">⚠️ Owner's phone not set. Go to Settings to add it.</p>
+                                </div>
+                            `}
+                            
+                            <div style="display:grid; gap:var(--space-3);">
+                                <a href="${whatsappUrl}" target="_blank" class="btn btn-success" style="text-align:center; text-decoration:none; font-size:var(--font-size-md);">
+                                    📱 Send via WhatsApp
+                                </a>
+                                
+                                <a href="sms:${ownerPhone}?body=${encodedMessage}" class="btn btn-secondary" style="text-align:center; text-decoration:none;">
+                                    💬 Send via SMS
+                                </a>
+                                
+                                <button class="btn btn-secondary" onclick="navigator.clipboard.writeText(\`${message.replace(/`/g, '\\`').replace(/\n/g, '\\n')}\`).then(() => alert('✅ Copied! Paste it anywhere.'))">
+                                    📋 Copy Message
+                                </button>
+                                
+                                ${navigator.share ? `
+                                <button class="btn btn-ghost" style="border:1px solid var(--border-primary);" onclick="navigator.share({title: 'Salary Payment Request', text: \`${message.replace(/`/g, '\\`')}\`}).then(() => document.getElementById('share-modal').remove()).catch(e => console.log(e))">
+                                    🔗 Share via Other Apps
+                                </button>
+                                ` : ''}
+                            </div>
+
+                            <details style="margin-top:var(--space-4);">
+                                <summary style="cursor:pointer; font-size:var(--font-size-sm); color:var(--text-muted);">Preview Message</summary>
+                                <div style="margin-top:var(--space-2); padding:var(--space-3); background:var(--bg-tertiary); border-radius:var(--radius-md); font-size:var(--font-size-xs); color:var(--text-muted); white-space:pre-wrap; border:1px solid var(--border-primary);">${message}</div>
+                            </details>
+                        </div>
+                    </div>
+                </div>
+            `;
+            const div = document.createElement('div');
+            div.innerHTML = modalHtml;
+            document.body.appendChild(div.firstElementChild);
+        }
+
+        function closePaymentModal(e) {
+            if (e && e.target !== e.currentTarget) return;
+            document.getElementById('payment-modal').classList.add('hidden');
+            currentPayment = { employeeId: null, gross: 0, loanBalance: 0, deductAmount: 0, willDeduct: false };
+        }
+
+        function toggleDeduction(willDeduct) {
+            currentPayment.willDeduct = willDeduct;
+
+            const btnYes = document.getElementById('btn-deduct-yes');
+            const btnNo = document.getElementById('btn-deduct-no');
+            const amountSection = document.getElementById('deduction-amount-section');
+            const deductionRow = document.getElementById('payment-deduction-row');
+
+            if (willDeduct) {
+                btnYes.classList.remove('btn-secondary');
+                btnYes.classList.add('btn-primary');
+                btnNo.classList.remove('btn-primary');
+                btnNo.classList.add('btn-ghost');
+                amountSection.classList.remove('hidden');
+                deductionRow.style.display = 'flex';
+                updateFinalAmount();
+            } else {
+                btnNo.classList.remove('btn-ghost');
+                btnNo.classList.add('btn-primary');
+                btnYes.classList.remove('btn-primary');
+                btnYes.classList.add('btn-secondary');
+                amountSection.classList.add('hidden');
+                deductionRow.style.display = 'none';
+                currentPayment.deductAmount = 0;
+                const finalAmount = currentPayment.gross;
+                document.getElementById('payment-final').textContent = formatCurrency(finalAmount);
+                document.getElementById('proceed-amount').textContent = formatCurrency(finalAmount);
+                document.getElementById('payment-deduction-display').textContent = '-₹0';
+            }
+        }
+
+        function setMaxDeduction() {
+            const maxDeduct = Math.min(currentPayment.gross, currentPayment.loanBalance);
+            document.getElementById('deduction-amount').value = maxDeduct;
+            updateFinalAmount();
+        }
+
+        function updateFinalAmount() {
+            const deductInput = document.getElementById('deduction-amount');
+            let deductAmount = Number(deductInput.value) || 0;
+
+            // Validate deduction
+            const maxDeduct = Math.min(currentPayment.gross, currentPayment.loanBalance);
+            if (deductAmount > maxDeduct) {
+                deductAmount = maxDeduct;
+                deductInput.value = maxDeduct;
+            }
+            if (deductAmount < 0) {
+                deductAmount = 0;
+                deductInput.value = 0;
+            }
+
+            currentPayment.deductAmount = deductAmount;
+            const finalAmount = currentPayment.gross - deductAmount;
+
+            // Update all displays
+            document.getElementById('payment-final').textContent = formatCurrency(finalAmount);
+            document.getElementById('proceed-amount').textContent = formatCurrency(finalAmount);
+            document.getElementById('payment-deduction-display').textContent = `-${formatCurrency(deductAmount)}`;
+        }
+
+
+        // Add event listener for deduction input
+        document.getElementById('deduction-amount')?.addEventListener('input', updateFinalAmount);
+
+        function confirmPayment() {
+            const { employeeId, gross, deductAmount, willDeduct } = currentPayment;
+            const emp = appData.employees.find(e => e.id === employeeId);
+            if (!emp) return;
+
+            const finalPay = gross - deductAmount;
+
+            // Simply record the payment
+            processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct);
+        }
+
+        // Helper to process the record update
+        function processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct) {
+            const emp = appData.employees.find(e => e.id === employeeId);
+
+            // If there's a loan deduction, apply it
+            if (willDeduct && deductAmount > 0) {
+                // Find active loans and apply deduction
+                let remainingDeduction = deductAmount;
+                // Clone array to avoid modification issues during iteration
+                const loans = [...appData.loans];
+
+                for (const loan of loans) {
+                    if (loan.employeeId === employeeId && loan.status === 'approved' && (loan.remainingBalance || loan.amount) > 0) {
+                        const loanBalance = loan.remainingBalance || loan.amount;
+                        const deductFromLoan = Math.min(remainingDeduction, loanBalance);
+
+                        // Find original loan reference in appData
+                        const originalLoan = appData.loans.find(l => l.id === loan.id);
+                        if (!originalLoan) continue;
+
+                        // Add deduction record
+                        if (!originalLoan.deductions) originalLoan.deductions = [];
+                        originalLoan.deductions.push({
+                            date: getTodayDate(),
+                            amount: deductFromLoan
+                        });
+
+                        // Update remaining balance
+                        originalLoan.remainingBalance = loanBalance - deductFromLoan;
+                        if (originalLoan.remainingBalance <= 0) {
+                            originalLoan.status = 'paid';
+                            originalLoan.remainingBalance = 0;
+                        }
+
+                        saveData(); // Save changes
+
+                        remainingDeduction -= deductFromLoan;
+                        if (remainingDeduction <= 0) break;
+                    }
+                }
+            }
+
+            // Add Salary Record
+            if (!appData.salaries) appData.salaries = [];
+            appData.salaries.push({
+                id: generateId(),
+                employeeId,
+                amount: finalPay,
+                date: getTodayDate(),
+                timestamp: Date.now(),
+                deductions: willDeduct && deductAmount > 0 ? [{ amount: deductAmount, date: getTodayDate() }] : []
+            });
+            saveData();
+
+            // Note: Success overlay and refresh handled by showPaymentSuccess -> closePaymentSuccess
+        }
+
+
+
+
+        // ========== AUTHENTICATION ==========
+        // Get users from localStorage
+        function getUsers() {
+            const users = localStorage.getItem('laborManagerUsers');
+            if (!users) {
+                // Create default admin user if none exist
+                const defaultUsers = [
+                    { id: 'admin', name: 'Administrator', username: 'admin', password: 'admin123' }
+                ];
+                localStorage.setItem('laborManagerUsers', JSON.stringify(defaultUsers));
+                return defaultUsers;
+            }
+            return JSON.parse(users);
+        }
+
+        function saveUsers(users) {
+            localStorage.setItem('laborManagerUsers', JSON.stringify(users));
+        }
+
+        function getCurrentUser() {
+            const userId = sessionStorage.getItem('laborManagerUserId');
+            if (!userId) return null;
+            return getUsers().find(u => u.id === userId);
+        }
+
+        function checkAuth() {
+            return sessionStorage.getItem('laborManagerAuth') === 'true' && getCurrentUser();
+        }
+
+        function switchAuthTab(tab) {
+            document.getElementById('tab-login').classList.toggle('active', tab === 'login');
+            document.getElementById('tab-register').classList.toggle('active', tab === 'register');
+            document.getElementById('login-form').style.display = tab === 'login' ? 'block' : 'none';
+            document.getElementById('register-form').style.display = tab === 'register' ? 'block' : 'none';
+            document.getElementById('auth-subtitle').textContent = tab === 'login' ? 'Login to continue' : 'Create your account';
+            document.getElementById('auth-footer').textContent = tab === 'login'
+                ? "Don't have an account? Click \"Create Account\" above"
+                : "Already have an account? Click \"Login\" above";
+
+            // Clear errors
+            document.getElementById('login-error').style.display = 'none';
+            document.getElementById('register-error').style.display = 'none';
+            document.getElementById('register-success').style.display = 'none';
+        }
+
+        function handleRegister(event) {
+            event.preventDefault();
+            const name = document.getElementById('register-name').value.trim();
+            const username = document.getElementById('register-username').value.trim().toLowerCase();
+            const password = document.getElementById('register-password').value;
+            const confirm = document.getElementById('register-confirm').value;
+            const errorEl = document.getElementById('register-error');
+            const successEl = document.getElementById('register-success');
+
+            errorEl.style.display = 'none';
+            successEl.style.display = 'none';
+
+            // Validation
+            if (username.length < 3) {
+                errorEl.textContent = '❌ Username must be at least 3 characters';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password.length < 4) {
+                errorEl.textContent = '❌ Password must be at least 4 characters';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            if (password !== confirm) {
+                errorEl.textContent = '❌ Passwords do not match';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            const users = getUsers();
+            if (users.find(u => u.username === username)) {
+                errorEl.textContent = '❌ Username already exists';
+                errorEl.style.display = 'block';
+                return;
+            }
+
+            // Create user
+            const newUser = {
+                id: generateId(),
+                name,
+                username,
+                password
+            };
+            users.push(newUser);
+            saveUsers(users);
+
+            // Show success and switch to login
+            successEl.textContent = '✅ Account created! You can now login.';
+            successEl.style.display = 'block';
+
+            // Clear form
+            document.getElementById('register-name').value = '';
+            document.getElementById('register-username').value = '';
+            document.getElementById('register-password').value = '';
+            document.getElementById('register-confirm').value = '';
+
+            setTimeout(() => {
+                switchAuthTab('login');
+                document.getElementById('login-username').value = username;
+            }, 1500);
+        }
+
+        function handleLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById('login-username').value.trim().toLowerCase();
+            const password = document.getElementById('login-password').value;
+            const errorEl = document.getElementById('login-error');
+
+            const users = getUsers();
+            const user = users.find(u => u.username === username && u.password === password);
+
+            if (user) {
+                sessionStorage.setItem('laborManagerAuth', 'true');
+                sessionStorage.setItem('laborManagerUserId', user.id);
+                document.getElementById('login-overlay').style.display = 'none';
+                document.getElementById('app-container').style.display = 'flex';
+                errorEl.style.display = 'none';
+                updateUserDisplay();
+                init();
+            } else {
+                errorEl.textContent = '❌ Invalid username or password';
+                errorEl.style.display = 'block';
+                document.getElementById('login-password').value = '';
+            }
+        }
+
+        function handleLogout() {
+            if (confirm('Are you sure you want to logout?')) {
+                sessionStorage.removeItem('laborManagerAuth');
+                sessionStorage.removeItem('laborManagerUserId');
+                document.getElementById('app-container').style.display = 'none';
+                document.getElementById('login-overlay').style.display = 'flex';
+                document.getElementById('login-username').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('login-error').style.display = 'none';
+                switchAuthTab('login');
+            }
+        }
+
+        function updateUserDisplay() {
+            const user = getCurrentUser();
+            if (user) {
+                document.getElementById('user-display-name').textContent = user.name;
+                document.getElementById('user-display-username').textContent = '@' + user.username;
+                document.getElementById('user-avatar').textContent = getInitials(user.name);
+
+                // Update header dropdown
+                document.getElementById('account-btn').textContent = getInitials(user.name);
+                document.getElementById('dropdown-avatar').textContent = getInitials(user.name);
+                document.getElementById('dropdown-name').textContent = user.name;
+                document.getElementById('dropdown-username').textContent = '@' + user.username;
+
+                // Render users list for switching
+                renderAccountUsersList();
+            }
+        }
+
+        function toggleAccountDropdown() {
+            const dropdown = document.getElementById('account-dropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', (e) => {
+            const dropdown = document.getElementById('account-dropdown');
+            const btn = document.getElementById('account-btn');
+            if (dropdown && btn && !dropdown.contains(e.target) && !btn.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        function renderAccountUsersList() {
+            const container = document.getElementById('account-users-list');
+            const currentUser = getCurrentUser();
+            const users = getUsers();
+
+            // Show other users to switch to
+            const otherUsers = users.filter(u => u.id !== currentUser?.id);
+
+            if (otherUsers.length === 0) {
+                container.innerHTML = '';
+                return;
+            }
+
+            let html = '<div class="account-dropdown-divider"></div>';
+            html += '<div style="padding: var(--space-2) var(--space-4); font-size: var(--font-size-xs); color: var(--text-muted); font-weight: 600;">SWITCH ACCOUNT</div>';
+
+            otherUsers.forEach(user => {
+                html += `
+                    <div class="account-dropdown-user" onclick="switchUser('${user.id}')">
+                        <div class="attendance-avatar" style="width:32px;height:32px;font-size:var(--font-size-xs);">${getInitials(user.name)}</div>
+                        <div style="flex:1;">
+                            <div style="font-weight:500;font-size:var(--font-size-sm);">${user.name}</div>
+                            <div style="font-size:var(--font-size-xs);color:var(--text-muted);">@${user.username}</div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function switchUser(userId) {
+            const users = getUsers();
+            const user = users.find(u => u.id === userId);
+
+            if (user) {
+                sessionStorage.setItem('laborManagerUserId', userId);
+                updateUserDisplay();
+                document.getElementById('account-dropdown').classList.remove('show');
+
+                // Reload data for the new user (in a real app, each user would have their own data)
+                loadData();
+                refreshDashboard();
+
+                // Show notification
+                alert(`✅ Switched to ${user.name}`);
+            }
+        }
+
+        // ========== SETTINGS ==========
+        function refreshSettings() {
+            if (!appData.settings) appData.settings = {};
+            document.getElementById('setting-owner-name').value = appData.settings.ownerName || '';
+            document.getElementById('setting-owner-phone').value = appData.settings.ownerPhone || '';
+            document.getElementById('setting-owner-upi').value = appData.settings.ownerUpi || '';
+        }
+
+        function saveSettingsPage(e) {
+            e.preventDefault();
+            const ownerName = document.getElementById('setting-owner-name').value;
+            const ownerPhone = document.getElementById('setting-owner-phone').value;
+            const ownerUpi = document.getElementById('setting-owner-upi').value;
+
+            appData.settings = { ownerName, ownerPhone, ownerUpi };
+            saveData();
+            alert('Settings Saved Successfully! ✅');
+        }
+
+        function showAddAccountModal() {
+            document.getElementById('account-dropdown').classList.remove('show');
+            document.getElementById('app-container').style.display = 'none';
+            document.getElementById('login-overlay').style.display = 'flex';
+            switchAuthTab('register');
+        }
+
+        // ========== INIT ==========
+        function init() {
+            loadData();
+            updateUserDisplay();
+
+            // Update header date
+            const now = new Date();
+            document.getElementById('header-day').textContent = now.toLocaleDateString('en-US', { weekday: 'long' });
+            document.getElementById('header-date').textContent = now.toLocaleDateString('en-IN', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            // Setup nav
+            document.querySelectorAll('.nav-item').forEach(btn => {
+                if (btn.dataset.page) {
+                    btn.addEventListener('click', () => showPage(btn.dataset.page));
+                }
+            });
+
+            // Show dashboard
+            refreshDashboard();
+        }
+
+        // Check auth on page load
+        if (checkAuth()) {
+            document.getElementById('login-overlay').style.display = 'none';
+            document.getElementById('app-container').style.display = 'flex';
+            init();
+        }
+
+        // ========== PWA SERVICE WORKER ==========
+        let deferredPrompt;
+
+        // Register Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then((registration) => {
+                        console.log('✅ Service Worker registered:', registration.scope);
+                    })
+                    .catch((error) => {
+                        console.log('❌ Service Worker registration failed:', error);
+                    });
+            });
+        }
+
+        // Handle PWA Install Prompt
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            // Show install button
+            showInstallButton();
+        });
+
+        function showInstallButton() {
+            // Add install button to sidebar if not already present
+            if (!document.getElementById('pwa-install-btn')) {
+                const installBtn = document.createElement('button');
+                installBtn.id = 'pwa-install-btn';
+                installBtn.className = 'nav-item';
+                installBtn.innerHTML = '<span>📲</span><span>Install App</span>';
+                installBtn.style.cssText = 'color: var(--primary-400); border: 1px dashed var(--primary-400); margin: var(--space-2) var(--space-3); border-radius: var(--radius-lg);';
+                installBtn.onclick = installPWA;
+
+                const navContent = document.querySelector('.nav-content');
+                if (navContent) {
+                    navContent.insertBefore(installBtn, navContent.firstChild);
+                }
+            }
+        }
+
+        async function installPWA() {
+            if (!deferredPrompt) {
+                alert('App is already installed or installation is not available on this browser.');
+                return;
+            }
+
+            deferredPrompt.prompt();
+            const { outcome } = await deferredPrompt.userChoice;
+
+            if (outcome === 'accepted') {
+                console.log('✅ PWA installed');
+                document.getElementById('pwa-install-btn')?.remove();
+            }
+            deferredPrompt = null;
+        }
+
+        // Handle app installed event
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ Labor Manager installed successfully!');
+            document.getElementById('pwa-install-btn')?.remove();
+            deferredPrompt = null;
+        });
+    </script>
+</body>
+
+</html>
