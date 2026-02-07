@@ -3258,33 +3258,274 @@
                 }
             }
 
-            // Build UPI deep link based on selected method
-            let upiUrl = `upi://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+            // Build UPI URL (standard format for QR codes)
+            const upiUrl = `upi://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
 
-            // Add app-specific package hints for better app opening
-            if (method === 'gpay') {
-                // Google Pay
-                upiUrl = `gpay://upi/pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
-            } else if (method === 'phonepe') {
-                // PhonePe  
-                upiUrl = `phonepe://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
-            } else if (method === 'paytm') {
-                // Paytm
-                upiUrl = `paytmmp://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+            // Store payment details for confirmation
+            window.pendingPayment = { employeeId, empName: emp.name, finalPay, deductAmount, willDeduct };
+
+            // Detect if mobile device
+            const isMobile = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+
+            if (isMobile) {
+                // Mobile: Open UPI app directly
+                let appUrl = upiUrl;
+                if (method === 'gpay') {
+                    appUrl = `gpay://upi/pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+                } else if (method === 'phonepe') {
+                    appUrl = `phonepe://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+                } else if (method === 'paytm') {
+                    appUrl = `paytmmp://pay?pa=${emp.upiId}&pn=${encodeURIComponent(emp.name)}&am=${finalPay}&cu=INR&tn=Salary%20Payment`;
+                }
+
+                closePaymentModal();
+                window.location.href = appUrl;
+
+                // When user returns from UPI app, ask for confirmation
+                setTimeout(() => {
+                    showPaymentConfirmation();
+                }, 2000);
+            } else {
+                // Desktop: Show QR code
+                closePaymentModal();
+                showUpiQrCode(emp, finalPay, upiUrl);
+            }
+        }
+
+        // Show UPI QR code for desktop users
+        function showUpiQrCode(emp, amount, upiUrl) {
+            const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=${encodeURIComponent(upiUrl)}`;
+
+            const qrHtml = `
+                <div id="qr-payment-modal" class="modal-overlay">
+                    <div class="modal" style="max-width: 420px; text-align: center;">
+                        <div class="modal-header">
+                            <h3 class="modal-title">📱 Scan to Pay</h3>
+                            <button class="btn btn-ghost" onclick="closeQrPayment()">✕</button>
+                        </div>
+                        <div class="modal-body" style="padding: var(--space-5);">
+                            <!-- Amount Display -->
+                            <div style="background: linear-gradient(135deg, var(--primary-500), var(--primary-700)); color: white; padding: var(--space-4); border-radius: var(--radius-lg); margin-bottom: var(--space-4);">
+                                <p style="margin: 0; font-size: var(--font-size-sm); opacity: 0.9;">Pay to ${emp.name}</p>
+                                <p style="margin: var(--space-1) 0 0 0; font-size: var(--font-size-2xl); font-weight: 700;">₹${amount.toLocaleString('en-IN')}</p>
+                            </div>
+
+                            <!-- QR Code -->
+                            <div style="background: white; padding: var(--space-4); border-radius: var(--radius-lg); display: inline-block; margin-bottom: var(--space-4);">
+                                <img src="${qrApiUrl}" alt="UPI QR Code" style="width: 200px; height: 200px;" />
+                            </div>
+
+                            <!-- UPI ID Display -->
+                            <div style="background: var(--bg-tertiary); padding: var(--space-3); border-radius: var(--radius-md); margin-bottom: var(--space-4);">
+                                <p style="margin: 0; font-size: var(--font-size-xs); color: var(--text-muted);">UPI ID</p>
+                                <p style="margin: var(--space-1) 0 0 0; font-weight: 600; color: var(--primary-500);">${emp.upiId}</p>
+                                <button class="btn btn-ghost btn-sm" style="margin-top: var(--space-2);" onclick="navigator.clipboard.writeText('${emp.upiId}').then(() => alert('✅ UPI ID Copied!'))">
+                                    📋 Copy UPI ID
+                                </button>
+                            </div>
+
+                            <!-- Instructions -->
+                            <p style="font-size: var(--font-size-sm); color: var(--text-muted); margin-bottom: var(--space-4);">
+                                Open GPay/PhonePe/Paytm on your phone and scan this QR code
+                            </p>
+
+                            <!-- Action Buttons -->
+                            <div style="display: grid; gap: var(--space-3);">
+                                <button class="btn btn-success" onclick="confirmQrPayment()" style="padding: var(--space-4);">
+                                    ✅ I've Completed the Payment
+                                </button>
+                                <button class="btn btn-secondary" onclick="closeQrPayment()">
+                                    Cancel
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const div = document.createElement('div');
+            div.innerHTML = qrHtml;
+            document.body.appendChild(div.firstElementChild);
+        }
+
+        // Confirm payment from QR code
+        function confirmQrPayment() {
+            const payment = window.pendingPayment;
+            if (!payment) return;
+
+            document.getElementById('qr-payment-modal')?.remove();
+            processPaymentRecord(payment.employeeId, payment.finalPay, payment.deductAmount, payment.willDeduct);
+            showPaymentSuccess(payment.empName, payment.finalPay);
+            window.pendingPayment = null;
+        }
+
+        // Close QR payment modal
+        function closeQrPayment() {
+            document.getElementById('qr-payment-modal')?.remove();
+            window.pendingPayment = null;
+        }
+
+        // Show payment confirmation dialog after returning from UPI app
+        function showPaymentConfirmation() {
+            const payment = window.pendingPayment;
+            if (!payment) return;
+
+            // First show "Processing" animation, then show confirmation
+            const processingHtml = `
+                <div id="payment-processing-modal" class="modal-overlay" style="background: rgba(0,0,0,0.95);">
+                    <div style="text-align: center; color: white;">
+                        <div class="processing-spinner"></div>
+                        <p style="margin-top: var(--space-4); font-size: var(--font-size-lg);">Waiting for payment confirmation...</p>
+                        <p style="color: rgba(255,255,255,0.6); font-size: var(--font-size-sm);">Complete the payment in your UPI app</p>
+                    </div>
+                </div>
+            `;
+
+            const div = document.createElement('div');
+            div.innerHTML = processingHtml;
+            document.body.appendChild(div.firstElementChild);
+
+            // Add spinner CSS if not exists
+            if (!document.getElementById('spinner-style')) {
+                const style = document.createElement('style');
+                style.id = 'spinner-style';
+                style.textContent = `
+                    .processing-spinner {
+                        width: 60px; height: 60px;
+                        border: 4px solid rgba(255,255,255,0.2);
+                        border-top-color: var(--primary-500);
+                        border-radius: 50%;
+                        animation: spin 1s linear infinite;
+                        margin: 0 auto;
+                    }
+                    @keyframes spin { to { transform: rotate(360deg); } }
+                    .status-pill {
+                        display: inline-block;
+                        padding: var(--space-1) var(--space-3);
+                        border-radius: 20px;
+                        font-size: var(--font-size-xs);
+                        font-weight: 600;
+                    }
+                    .status-pending { background: rgba(245,158,11,0.2); color: #f59e0b; }
+                    .confirmation-btn {
+                        padding: var(--space-4) var(--space-5);
+                        border-radius: var(--radius-lg);
+                        font-size: var(--font-size-md);
+                        font-weight: 600;
+                        transition: all 0.2s ease;
+                        border: none;
+                        cursor: pointer;
+                        display: flex;
+                        align-items: center;
+                        justify-content: center;
+                        gap: var(--space-2);
+                    }
+                    .confirmation-btn:active { transform: scale(0.98); }
+                    .btn-confirm-success {
+                        background: linear-gradient(135deg, #10b981, #059669);
+                        color: white;
+                    }
+                    .btn-confirm-fail {
+                        background: var(--bg-tertiary);
+                        color: var(--text-secondary);
+                        border: 1px solid var(--border-primary);
+                    }
+                `;
+                document.head.appendChild(style);
             }
 
-            // Close payment modal first
-            closePaymentModal();
-
-            // Open the UPI app
-            window.location.href = upiUrl;
-
-            // Record payment and show success after a short delay
-            // (allows time for UPI app to open)
+            // After a delay, show the confirmation options
             setTimeout(() => {
-                processPaymentRecord(employeeId, finalPay, deductAmount, willDeduct);
-                showPaymentSuccess(emp.name, finalPay);
-            }, 1500);
+                document.getElementById('payment-processing-modal')?.remove();
+                showConfirmationOptions(payment);
+            }, 2500);
+        }
+
+        // Show the actual confirmation options
+        function showConfirmationOptions(payment) {
+            const txnId = 'TXN' + Date.now().toString().slice(-8);
+
+            const confirmHtml = `
+                <div id="payment-confirm-modal" class="modal-overlay" style="background: rgba(0,0,0,0.9);">
+                    <div class="modal" style="max-width: 380px; border-radius: var(--radius-xl); overflow: hidden;">
+                        <!-- Header with amount -->
+                        <div style="background: linear-gradient(135deg, var(--primary-600), var(--primary-800)); padding: var(--space-5); text-align: center; color: white;">
+                            <p style="margin: 0; opacity: 0.9; font-size: var(--font-size-sm);">Payment to</p>
+                            <p style="margin: var(--space-1) 0; font-size: var(--font-size-lg); font-weight: 600;">${payment.empName}</p>
+                            <p style="margin: var(--space-2) 0 0 0; font-size: var(--font-size-2xl); font-weight: 700;">₹${payment.finalPay.toLocaleString('en-IN')}</p>
+                        </div>
+
+                        <!-- Status & Reference -->
+                        <div style="padding: var(--space-4); background: var(--bg-secondary);">
+                            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: var(--space-3);">
+                                <span style="color: var(--text-muted); font-size: var(--font-size-sm);">Status</span>
+                                <span class="status-pill status-pending">⏳ Awaiting Confirmation</span>
+                            </div>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <span style="color: var(--text-muted); font-size: var(--font-size-sm);">Reference</span>
+                                <span style="font-family: monospace; font-size: var(--font-size-sm);">${txnId}</span>
+                            </div>
+                        </div>
+
+                        <!-- Confirmation Buttons -->
+                        <div style="padding: var(--space-4); display: grid; gap: var(--space-3);">
+                            <button class="confirmation-btn btn-confirm-success" onclick="confirmPaymentSuccess()">
+                                <span style="font-size: 20px;">✓</span>
+                                Payment Completed
+                            </button>
+                            <button class="confirmation-btn btn-confirm-fail" onclick="cancelPaymentConfirmation()">
+                                <span style="font-size: 18px;">✗</span>
+                                Payment Failed / Cancelled
+                            </button>
+                        </div>
+
+                        <!-- Help text -->
+                        <div style="padding: 0 var(--space-4) var(--space-4); text-align: center;">
+                            <p style="margin: 0; font-size: var(--font-size-xs); color: var(--text-muted);">
+                                Check your UPI app for transaction status
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            const div = document.createElement('div');
+            div.innerHTML = confirmHtml;
+            document.body.appendChild(div.firstElementChild);
+        }
+
+        // User confirmed payment was successful
+        function confirmPaymentSuccess() {
+            const payment = window.pendingPayment;
+            if (!payment) return;
+
+            document.getElementById('payment-confirm-modal')?.remove();
+            processPaymentRecord(payment.employeeId, payment.finalPay, payment.deductAmount, payment.willDeduct);
+            showPaymentSuccess(payment.empName, payment.finalPay);
+            window.pendingPayment = null;
+        }
+
+        // User said payment failed/cancelled
+        function cancelPaymentConfirmation() {
+            document.getElementById('payment-confirm-modal')?.remove();
+            window.pendingPayment = null;
+
+            // Show failure message nicely
+            const failHtml = `
+                <div id="payment-fail-modal" class="modal-overlay" style="background: rgba(0,0,0,0.9);" onclick="this.remove()">
+                    <div style="text-align: center; color: white; padding: var(--space-6);">
+                        <div style="font-size: 64px; margin-bottom: var(--space-3);">❌</div>
+                        <h3 style="margin: 0 0 var(--space-2) 0;">Payment Not Recorded</h3>
+                        <p style="margin: 0; color: rgba(255,255,255,0.7);">Try again from the Salary page</p>
+                        <button class="btn btn-primary" onclick="document.getElementById('payment-fail-modal').remove()" style="margin-top: var(--space-4);">
+                            OK
+                        </button>
+                    </div>
+                </div>
+            `;
+            const div = document.createElement('div');
+            div.innerHTML = failHtml;
+            document.body.appendChild(div.firstElementChild);
         }
 
         // Show payment success overlay with confetti
