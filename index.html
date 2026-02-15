@@ -3646,8 +3646,56 @@
 
                 // Deep Link ONLY on Mobile
                 const isMobile = /Android|iPhone|iPad|iPod/i.test(navigator.userAgent);
+                const isAndroid = /Android/i.test(navigator.userAgent);
+
                 if (isMobile) {
-                    window.location.href = upiUrl;
+                    let deepLink = upiUrl;
+                    let shouldUseFallback = true; // Use JS fallback by default (for iOS)
+
+                    if (isAndroid) {
+                        // usage of intent:// scheme on Android automatically handles fallback to Play Store
+                        shouldUseFallback = false;
+
+                        let packageName = '';
+                        if (selectedPaymentMethod === 'gpay') {
+                            packageName = 'com.google.android.apps.nbu.paisa.user';
+                        } else if (selectedPaymentMethod === 'phonepe') {
+                            packageName = 'com.phonepe.app';
+                        } else if (selectedPaymentMethod === 'paytm') {
+                            packageName = 'net.one97.paytm';
+                        }
+
+                        // Remove 'upi://' prefix
+                        const intentPath = upiUrl.replace('upi://', '');
+
+                        if (packageName) {
+                            // With browser_fallback_url, Chrome will open Play Store if app missing
+                            deepLink = `intent://${intentPath}#Intent;scheme=upi;package=${packageName};S.browser_fallback_url=https://play.google.com/store/apps/details?id=${packageName};end`;
+                        } else {
+                            // Generic UPI Intent
+                            deepLink = `intent://${intentPath}#Intent;scheme=upi;end`;
+                        }
+                    } else {
+                        // iOS logic remains standard upi:// for now
+                    }
+
+                    // Attempt to open
+                    window.location.href = deepLink;
+
+                    // Fallback check (only if not handled by intent scheme)
+                    if (shouldUseFallback) {
+                        const start = Date.now();
+                        setTimeout(() => {
+                            // Check if page is hidden (user switched apps)
+                            if (document.hidden || document.webkitHidden) return;
+
+                            // Check if significant time passed (likely switched apps)
+                            if (Date.now() - start > 2000) return;
+
+                            // If we are still here immediately
+                            showToast('App not installed or deep link failed.', 'error');
+                        }, 1000);
+                    }
                 }
 
                 // Show Step 2 (Scan & Pay)
