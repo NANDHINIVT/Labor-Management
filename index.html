@@ -3649,6 +3649,36 @@
                 const isAndroid = /Android/i.test(navigator.userAgent);
 
                 if (isMobile) {
+                    // Mobile: Redirect to specific app directly and DO NOT show scanner
+                    let appUrl = upiUrl;
+
+                    if (selectedPaymentMethod === 'gpay') {
+                        appUrl = upiUrl.replace('upi://pay', 'gpay://upi/pay');
+                    } else if (selectedPaymentMethod === 'phonepe') {
+                        appUrl = upiUrl.replace('upi://pay', 'phonepe://pay');
+                    } else if (selectedPaymentMethod === 'paytm') {
+                        appUrl = upiUrl.replace('upi://pay', 'paytmmp://pay');
+                    }
+
+                    // Attempt redirect
+                    window.location.href = appUrl;
+
+                    // Fallback detection
+                    const start = Date.now();
+                    setTimeout(() => {
+                        if (document.hidden || document.webkitHidden) return;
+                        if (Date.now() - start > 2000) return;
+
+                        if (selectedPaymentMethod === 'gpay') {
+                            showToast('Google Pay app not found. Please install it.', 'error');
+                        } else {
+                            showToast(`${selectedPaymentMethod} app not found.`, 'error');
+                        }
+                    }, 1000);
+
+                    return; // Stop here to prevent showing the scanner and executing old logic
+
+                    // OLD LOGIC (Unreachable)
                     let deepLink = upiUrl;
                     let shouldUseFallback = true; // Use JS fallback by default (for iOS)
 
