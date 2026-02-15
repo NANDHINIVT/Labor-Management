@@ -1,5 +1,5 @@
 // Service Worker for Labor Manager PWA
-const CACHE_NAME = 'labor-manager-v1';
+const CACHE_NAME = 'labor-manager-v2';
 const ASSETS_TO_CACHE = [
     './',
     './index.html',
